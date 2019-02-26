@@ -4,14 +4,18 @@
      alt="Markdown Monster icon"
      style="float: left; margin-right: 10px;" />
 
-# Goal
+# Background of Project
 
-To find America's Next Top Model
+Some Information
 
+# Relevant Infromation
 
-# Questions
+Some Relevant Information
 
-1. What can I predict? 
+# Goal/Question
+
+1. To find America's Next Top Model
+2. What can I predict? 
 
 # Page Set Up
 <img src="./images/owze6.jpg"
@@ -32,10 +36,17 @@ Used Python Library of requests and Beautiful Soup
 # Database
 Pipelined the webscraping data into a Mongos Database.
 
+# Hypotheses
+Ho- Null Hypotheses
+Ha= Alternative Hypotheses
+
 # EDA
 1. Explored the data
 
-# What was learned?
+# Model Built
+1. America's Next Top Model
+
+# Results/What was learned?
 1. Small and quick iterations :)
 
 # Things to have done differently
@@ -43,3 +54,9 @@ Pipelined the webscraping data into a Mongos Database.
 
 # Next Step
 1. Have a project
+
+# Acknowledgements
+Acknowledged
+
+# References
+Referenced
