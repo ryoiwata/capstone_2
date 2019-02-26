@@ -1,15 +1,10 @@
-## Preliminary Proposal Specifications
-
-The capstone project will serve as the key evidence for employers about what you're capable of building.
-
-**Purpose**: Organize initial ideas and allow us to provide feedback!
-
-**Format**: A well formatted markdown file that will be part of your final
-git repo.
-
-**Count**: You should have 3 proposals. Ideally
+# Proposal 1
   * one where you know you can get the data,
+
+# Proposal 2
   * one where you think you can get the data and
+
+# Proposal 3
   * one that is a stretch for the data being obtainable.
 
 **Include the following**:

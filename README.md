@@ -1,6 +1,6 @@
 # Galvanize Capstone Project Ryo Iwata
 
-<img src="./images/capstone.jpeg"
+<img src="./images/capstone.jpg"
      alt="Markdown Monster icon"
      style="float: left; margin-right: 10px;" />
 
