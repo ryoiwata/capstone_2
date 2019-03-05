@@ -1,3 +1,6 @@
+# Day 2, Tuesday (2019/2/26)
+
+
 # Day 1, Monday (2019/2/25)
 
 Things need to be done:

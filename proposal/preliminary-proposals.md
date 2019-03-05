@@ -1,40 +1,11 @@
-**Note, the responses to these questions should be complete sentences, not sentence fragments.**
+# Proposal 1: Cognitive Distortion Classifier
 
-# Proposal 1
-  * one where you know you can get the data,
+This project will attempt to classify an inputted sentence as one of five cognitive distortions as defined by David Burn’s book on Cognitive behavioral therapy named Feeling Good. I will be using Natural Language Processing along with classification models to create a web app that will help users identify which cognitive distortion their thoughts contain. The model will be trained on passages that are used in Feeling Good that have been identified to have a certain cognitive distortion along with other books of Cognitive behavioral therapy. If successful, this can help mental health professionals build tools for online cognitive behavior treatment. My next step will be to learn more about NLP and collect passages that can be classified. 
 
-1. High level description of project.
-2. What question or problem are you trying to solve?
-3. How will you present your work?  
-  * Web app
-  * Visualization
-  * Presentation - slides
-4. What are your data sources?
-5. What’s your next step towards making this your project.
-  * Probably getting the data.
+# Proposal 2: Forest Fire Satellite Image Predictor
 
-# Proposal 2
-  * one where you think you can get the data and
+This project will attempt to identify early indicators of forest fires in satellite images. I will be using image processing techniques along with classification models to create a model that will identify regions of concern based on satellite images. This process and the results will be presented as a presentation on slides. The model will be trained on satellite images that are matched with the coordinates and times of reported forest fires. If successful, this can help Forest services to better predict where forest fires are going to occur to and deploy resources accordingly. My next step will be to learn more about image processing/previous research on forest fire imagery, and collect satellite images that can be classified. 
 
-1. High level description of project.
-2. What question or problem are you trying to solve?
-3. How will you present your work?  
-  * Web app
-  * Visualization
-  * Presentation - slides
-4. What are your data sources?
-5. What’s your next step towards making this your project.
-  * Probably getting the data.
+# Proposal 3: Map of Food Ingredients and Molecules
 
-# Proposal 3
-  * one that is a stretch for the data being obtainable.
-
-1. High level description of project.
-2. What question or problem are you trying to solve?
-3. How will you present your work?  
-  * Web app
-  * Visualization
-  * Presentation - slides
-4. What are your data sources?
-5. What’s your next step towards making this your project.
-  * Probably getting the data.
+This project will attempt to map ingredients in cooking recipes based on their different flavor profiles. I will be using FlavorDB, a database that has matched different ingredients with associated molecules that represents certain flavors. The relationship of these ingredients to others will be mapped based on their frequency of association with others ingredients in recipes. These recipes will be webscraped from different cooking related websites. Using the K-Nearest Neighbor methods and other unsupervised learning methods, I will creating a web app that lets users explore these relationships between ingredients and flavor molecules. My next step will be to learn more about how flavor and molecules are related and begin webscraping recipes for their food pairings. 
