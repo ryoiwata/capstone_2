@@ -1,0 +1,2 @@
+#ignores the sql data file in /data/molecule_data
+*.sql
