@@ -1,5 +1,5 @@
 #ignores the sql data file in /data/molecule_data
 *.sql
-
 #ignores the csv files that are too large in /data
 data/molecule_data/foodb_2017_06_29_csv
+
