@@ -47,13 +47,19 @@ for num in range(0,973):
             list_molecule_names.append(molecule_name)
             list_molecule_id.append(molecule_id)
             list_molecule_flavor.append(molecule_flavor)
-   
+
+        #turn lists into sets for easy comparison, can't turn molecule flavor into set because list of lists
+        set_molecule_names = set(list_molecule_names)
+        set_molecule_ids = set(list_molecule_id)
+
         # Insert everything into MondoDB
-        collections.insert_one({"ingredient": ingredient_name, "catgeory": category_name, "molecules": list_molecule_names, "molecule_IDs": list_molecule_id, "flavor_of_molecules": list_molecule_flavor})
+        collections.insert_one({"ingredient": ingredient_name, "catgeory": category_name, "molecules": set_molecule_names, "molecule_IDs": set_molecule_ids, "flavor_of_molecules": list_molecule_flavor})
         
-        # #Print Statement to Check What's Going On
-        data = collections.find_one({"ingredient": ingredient_name}, {"ingredient": ingredient_name, "catgeory": category_name, "molecules": list_molecule_names})
+        #Print Statement to Check What's Going On
+        data = collections.find_one({"ingredient": ingredient_name}, {"ingredient": ingredient_name, "catgeory": category_name, "molecules": set_molecule_names})
         print(data)
+    
+    #An except statement if something happens and add to the list of entries to redo
     except:
         print("something's not right")
         redo_entries_list.append(num)
