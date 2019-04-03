@@ -4,6 +4,8 @@ from pymongo import MongoClient
 
 #Python Library for Dataframe usage
 import pandas as pd
+import numpy as np
+import random 
 
 #Serializing to a file
 import _pickle as pickle
@@ -24,37 +26,52 @@ flavorDB_pandas["set_molecules_ID"] = flavorDB_pandas["molecule_IDs"].apply(lamb
 #Creation of the Flavor Matrix
 flavor_matrix_df = {}
 
-#iterate through each row of flavorDB
+#Making a list of random numbers with a certain seed
+random.seed(30)
+random_samples_to_972 = random.sample(range(973), 100)
+random_samples_to_972.sort()
+
+
+
+
+
+#iterate through each row of flavorDB based on if index is in random sample
 for index, row in flavorDB_pandas.iterrows():
+    if index in random_samples_to_972:
+        #might incorporate this might not
+        list_of_shared_molecules = []
+        list_of_number_of_shared_molecules = []
+        
+        #set of the ingredient from the "rows"
+        set1= row["set_molecules"]
+        #name of the ingredient from the "rows" 
+        ingredient_1 = row["ingredient"]
+        
+        #starting a dictionary entry with a value of an empty dict
+        flavor_matrix_df[ingredient_1] = {}  
+        
+        #iterate through the "columns" of ingredients
+        for index, row in flavorDB_pandas.iterrows():
+            if index in random_samples_to_972:
+                #set of the ingredient from the "columns" of ingredients
+                set2 = row["set_molecules"]
+                #nome of the ingredient from the "columns" of ingredients
+                ingredient_2 = row["ingredient"]
+                
+                #The molecules that are shared between the two sets
+                shared_molecules = set1.intersection(set2)       
+                
+                #access the dictionary of a dictionary from 1st ingredient 
+                #set the value as the number of shared molecules
+                flavor_matrix_df[ingredient_1][ingredient_2] = len(shared_molecules)       
+            else:
+                pass
+    else:
+        pass
 
-    #might incorporate this might not
-    list_of_shared_molecules = []
-    list_of_number_of_shared_molecules = []
-    
-    #set of the ingredient from the "rows"
-    set1= row["set_molecules"]
-    #name of the ingredient from the "rows" 
-    ingredient_1 = row["ingredient"]
-    
-    #starting a dictionary entry with a value of an empty dict
-    flavor_matrix_df[ingredient_1] = {}  
-    
-    #iterate through the "columns" of ingredients
-    for index, row in flavorDB_pandas.iterrows():
-        
-        #set of the ingredient from the "columns" of ingredients
-        set2 = row["set_molecules"]
-        #nome of the ingredient from the "columns" of ingredients
-        ingredient_2 = row["ingredient"]
-        
-        #The molecules that are shared between the two sets
-        shared_molecules = set1.intersection(set2)       
-        
-        #access the dictionary of a dictionary from 1st ingredient 
-        #set the value as the number of shared molecules
-        flavor_matrix_df[ingredient_1][ingredient_2] = len(shared_molecules)       
 
-with open('flavor_matrix_dict.pickle', 'wb') as file:
+
+with open('small_flavor_matrix_dict.pickle', 'wb') as file:
     file.write(pickle.dumps(flavor_matrix_df))
     file.close()
 
