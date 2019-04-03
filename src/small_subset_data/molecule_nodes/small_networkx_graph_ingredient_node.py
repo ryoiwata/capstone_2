@@ -25,7 +25,7 @@ ingredient_nodes = nx.get_node_attributes(G, 'ingredient_node').keys()
 molecule_nodes = nx.get_node_attributes(G, 'molecule_node').keys()
 
 print('Shape node ids: {}'.format(ingredient_nodes))
-print('Color node ids: {}'.format(molecule_nodes))
+print('Color node ids: {}'.format(molecule_nodese))
 
 # #getting all the weights of each edge
 # all_weights = []

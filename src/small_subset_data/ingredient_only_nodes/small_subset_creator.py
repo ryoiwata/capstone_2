@@ -1,3 +1,8 @@
+"""
+Takes a small subset of the data and turns it into a dictionary so that it can be used by NetworkX
+"""
+
+
 #Python Libraries for Mongos Database
 import pymongo
 from pymongo import MongoClient
@@ -10,8 +15,6 @@ from collections import defaultdict
 
 #Serializing to a file
 import _pickle as pickle
-
-
 
 #accessing mongoDB
 client = MongoClient()
@@ -34,10 +37,6 @@ random.seed(30)
 random_samples_to_972 = random.sample(range(973), 20)
 random_samples_to_972.sort()
 
-
-
-
-
 #iterate through each row of flavorDB based on if index is in random sample
 for index, row in flavorDB_pandas.iterrows():
     #to see if it is in the random sample
@@ -50,12 +49,6 @@ for index, row in flavorDB_pandas.iterrows():
         set1= row["set_molecules"]
         #name of the ingredient from the "rows" 
         ingredient_1 = row["ingredient"]
-        
-        #Going to replace this with a default dict
-        """
-        #starting a dictionary entry with a value of an empty dict
-        flavor_matrix_df[ingredient_1] = {}  
-        """
 
         #iterate through the "columns" of ingredients
         for index, row in flavorDB_pandas.iterrows():
@@ -82,16 +75,7 @@ for index, row in flavorDB_pandas.iterrows():
                     if len(shared_molecules) > 0:
                         flavor_matrix_df[ingredient_1][ingredient_2] = {'shared_molecules': len(shared_molecules)}       
                 
-                
-                else: 
-                    pass   
-            else:
-                pass
-    else:
-        pass
-
-
-
+#put it into a pickle
 with open('small_flavor_matrix_dict.pickle', 'wb') as file:
     file.write(pickle.dumps(flavor_matrix_df))
     file.close()

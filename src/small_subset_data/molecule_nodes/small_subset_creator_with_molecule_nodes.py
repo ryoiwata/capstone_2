@@ -1,3 +1,7 @@
+"""
+Takes a small subset of the data, and then makes a graph based off of nodes of ingredients and molecules
+"""
+
 #Python Libraries for Mongos Database
 import pymongo
 from pymongo import MongoClient
@@ -36,8 +40,6 @@ random.seed(10)
 random_samples_to_972 = random.sample(range(973), 50)
 random_samples_to_972.sort()
 
-
-
 G=nx.Graph()
 
 #iterate through each row of flavorDB based on if index is in random sample
@@ -62,51 +64,7 @@ for index, row in flavorDB_pandas.iterrows():
                 G.node[molecule]["molecule_node"] = True
                 G.add_edge(ingredient_1, molecule)
 
-
-
-    #     #Going to replace this with a default dict
-    #     """
-    #     #starting a dictionary entry with a value of an empty dict
-    #     flavor_matrix_df[ingredient_1] = {}  
-    #     """
-
-    #     #iterate through the "columns" of ingredients
-    #     for index, row in flavorDB_pandas.iterrows():
-    #         #to see if it is in the random sample
-    #         if index in random_samples_to_972:
-                
-    #             #set of the ingredient from the "columns" of ingredients
-    #             set2 = row["set_molecules"]
-    #             #nome of the ingredient from the "columns" of ingredients
-    #             ingredient_2 = row["ingredient"]
-                
-    #             #checking to see if ingredients are different
-    #             if ingredient_1 != ingredient_2:
-    #                 #The molecules that are shared between the two sets
-    #                 shared_molecules = set1.intersection(set2)       
-                    
-    #                 #access the dictionary of a dictionary from 1st ingredient 
-    #                 #set the value as the number of shared molecules
-    #                 #Below code is for non networkx use    
-    #                 # flavor_matrix_df[ingredient_1][ingredient_2] = len(shared_molecules)
-
-    #                 #Below is for networkX use
-    #                 #Only includes edges that have at least one shared molecule
-    #                 if len(shared_molecules) > 0:
-    #                     for 
-    #                     flavor_matrix_df[ingredient_1][ingredient_2] = {'shared_molecules': len(shared_molecules)}       
-                
-                
-    #             else: 
-    #                 pass   
-    #         else:
-    #             pass
-    # else:
-    #     pass
-
-
-
-with open('small_flavor_matrix_graph_ingredient_node.pickle', 'wb') as file:
+with open('small_flavor_matrix_graph_molecule_node.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
     file.close()
 
