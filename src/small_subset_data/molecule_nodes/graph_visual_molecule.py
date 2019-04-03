@@ -6,7 +6,7 @@ import networkx as nx
 import pickle
 
 #Opening the pickled file
-pickle_in = open("small_flavor_matrix_graph_ingredient_node.pickle","rb")
+pickle_in = open("molecule_subset_graph.pickle","rb")
 
 #Getting the dictionary from the pickle
 pickled_G = pickle.load(pickle_in)
@@ -24,8 +24,8 @@ print(G.number_of_nodes())
 ingredient_nodes = nx.get_node_attributes(G, 'ingredient_node').keys()
 molecule_nodes = nx.get_node_attributes(G, 'molecule_node').keys()
 
-print('Shape node ids: {}'.format(ingredient_nodes))
-print('Color node ids: {}'.format(molecule_nodese))
+print('Ingredient nodes ids: {}'.format(ingredient_nodes))
+print('Molecule nodes ids: {}'.format(molecule_nodes))
 
 # #getting all the weights of each edge
 # all_weights = []
