@@ -6,9 +6,12 @@ from pymongo import MongoClient
 import pandas as pd
 import numpy as np
 import random 
+from collections import defaultdict
 
 #Serializing to a file
 import _pickle as pickle
+
+
 
 #accessing mongoDB
 client = MongoClient()
@@ -24,7 +27,7 @@ flavorDB_pandas["set_molecules"] = flavorDB_pandas["molecules"].apply(lambda row
 flavorDB_pandas["set_molecules_ID"] = flavorDB_pandas["molecule_IDs"].apply(lambda row: set(row))
 
 #Creation of the Flavor Matrix
-flavor_matrix_df = {}
+flavor_matrix_df = defaultdict(dict)
 
 #Making a list of random numbers with a certain seed
 random.seed(30)
@@ -37,6 +40,7 @@ random_samples_to_972.sort()
 
 #iterate through each row of flavorDB based on if index is in random sample
 for index, row in flavorDB_pandas.iterrows():
+    #to see if it is in the random sample
     if index in random_samples_to_972:
         #might incorporate this might not
         list_of_shared_molecules = []
@@ -47,11 +51,15 @@ for index, row in flavorDB_pandas.iterrows():
         #name of the ingredient from the "rows" 
         ingredient_1 = row["ingredient"]
         
+        #Going to replace this with a default dict
+        """
         #starting a dictionary entry with a value of an empty dict
         flavor_matrix_df[ingredient_1] = {}  
-        
+        """
+
         #iterate through the "columns" of ingredients
         for index, row in flavorDB_pandas.iterrows():
+            #to see if it is in the random sample
             if index in random_samples_to_972:
                 
                 #set of the ingredient from the "columns" of ingredients
@@ -70,20 +78,13 @@ for index, row in flavorDB_pandas.iterrows():
                     # flavor_matrix_df[ingredient_1][ingredient_2] = len(shared_molecules)
 
                     #Below is for networkX use
-                    flavor_matrix_df[ingredient_1][ingredient_2] = {'shared_molecules': len(shared_molecules)}       
+                    #Only includes edges that have at least one shared molecule
+                    if len(shared_molecules) > 0:
+                        flavor_matrix_df[ingredient_1][ingredient_2] = {'shared_molecules': len(shared_molecules)}       
                 
                 
-                else: #change this code if you need same ingredient to be set to zero
-                    #The molecules that are shared between the two sets
-                    shared_molecules = set1.intersection(set2)       
-                    
-                    #access the dictionary of a dictionary from 1st ingredient 
-                    #set the value as the number of shared molecules
-                    #Below code is for non networkx use    
-                    # flavor_matrix_df[ingredient_1][ingredient_2] = len(shared_molecules)
-
-                    #Below is for networkX use
-                    flavor_matrix_df[ingredient_1][ingredient_2] = {'shared_molecules': len(shared_molecules)}       
+                else: 
+                    pass   
             else:
                 pass
     else:

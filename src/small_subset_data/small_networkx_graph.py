@@ -11,9 +11,24 @@ pickle_in = open("small_flavor_matrix_dict.pickle","rb")
 #Getting the dictionary from the pickle
 flavor_matrix_dict = pickle.load(pickle_in)
 
+print(flavor_matrix_dict)
+
+
+
 #Converting a dictionary of dictionaries to a graph
 G = nx.from_dict_of_dicts(flavor_matrix_dict)
 
-fig, ax = plt.subplots(1, 1, figsize=(8, 6));
-nx.draw_networkx(G, ax=ax)
-plt.show()
+print(G.edges.data('shared_molecules', default=1))
+print(G.number_of_edges())
+print(G.number_of_nodes())
+
+all_weights = []
+for (node1,node2,data) in G.edges(data=True):
+    all_weights.append(data['weight'])
+
+
+
+# #Plotting the Graph 
+# fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+# nx.draw_networkx(G, ax=ax)
+# plt.show()
