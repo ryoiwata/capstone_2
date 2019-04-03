@@ -11,9 +11,6 @@ pickle_in = open("molecule_subset_graph.pickle","rb")
 #Getting the dictionary from the pickle
 pickled_G = pickle.load(pickle_in)
 
-
-
-
 #Converting a dictionary of dictionaries to a graph
 G = pickled_G
 
@@ -26,23 +23,6 @@ molecule_nodes = nx.get_node_attributes(G, 'molecule_node').keys()
 
 print('Ingredient nodes ids: {}'.format(ingredient_nodes))
 print('Molecule nodes ids: {}'.format(molecule_nodes))
-
-# #getting all the weights of each edge
-# all_weights = []
-# for (node1,node2,data) in G.edges(data=True):
-#     all_weights.append(data['shared_molecules'])
-
-# #getting the unique weights of all the edges
-# unique_weights = list(set(all_weights))
-
-# for weight in unique_weights:
-#         #4 d. Form a filtered list with just the weight you want to draw
-#         weighted_edges = [(node1,node2) for (node1,node2,edge_attr) in G.edges(data=True) if edge_attr['shared_molecules']==weight]
-#         width = weight*G.number_of_nodes()/sum(all_weights)
-#         nx.draw_networkx_edges(G,pos=nx.spring_layout(G), edgelist=weighted_edges,width=width)
-# # plt.axis('off')
-# # plt.show() 
-
 
 #Plotting the Graph 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
