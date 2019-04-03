@@ -14,3 +14,6 @@ flavor_matrix_dict = pickle.load(pickle_in)
 #Converting a dictionary of dictionaries to a graph
 G = nx.from_dict_of_dicts(flavor_matrix_dict)
 
+fig, ax = plt.subplots(1, 1, figsize=(8, 6));
+nx.draw_networkx(G, ax=ax)
+plt.show()
