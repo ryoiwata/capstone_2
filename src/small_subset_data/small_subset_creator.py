@@ -63,7 +63,11 @@ for index, row in flavorDB_pandas.iterrows():
                 
                 #access the dictionary of a dictionary from 1st ingredient 
                 #set the value as the number of shared molecules
-                flavor_matrix_df[ingredient_1][ingredient_2] = len(shared_molecules)       
+                #Below code is for non networkx use    
+                # flavor_matrix_df[ingredient_1][ingredient_2] = len(shared_molecules)
+
+                #Below is for networkX use
+                flavor_matrix_df[ingredient_1][ingredient_2] = {'shared_molecules': len(shared_molecules)}       
             else:
                 pass
     else:
