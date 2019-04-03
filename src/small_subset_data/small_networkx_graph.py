@@ -22,13 +22,24 @@ print(G.edges.data('shared_molecules', default=1))
 print(G.number_of_edges())
 print(G.number_of_nodes())
 
+#getting all the weights of each edge
 all_weights = []
 for (node1,node2,data) in G.edges(data=True):
-    all_weights.append(data['weight'])
+    all_weights.append(data['shared_molecules'])
+
+#getting the unique weights of all the edges
+unique_weights = list(set(all_weights))
+
+for weight in unique_weights:
+        #4 d. Form a filtered list with just the weight you want to draw
+        weighted_edges = [(node1,node2) for (node1,node2,edge_attr) in G.edges(data=True) if edge_attr['shared_molecules']==weight]
+        width = weight*G.number_of_nodes()/sum(all_weights)
+        nx.draw_networkx_edges(G,pos=nx.spring_layout(G), edgelist=weighted_edges,width=width)
+# plt.axis('off')
+# plt.show() 
 
 
-
-# #Plotting the Graph 
-# fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-# nx.draw_networkx(G, ax=ax)
-# plt.show()
+#Plotting the Graph 
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+nx.draw_networkx(G, ax=ax)
+plt.show()
