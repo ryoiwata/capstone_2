@@ -11,6 +11,8 @@ from collections import defaultdict
 #Serializing to a file
 import _pickle as pickle
 
+#Libraries for Graph
+import networkx as nx
 
 
 #accessing mongoDB
@@ -36,7 +38,7 @@ random_samples_to_972.sort()
 
 
 
-
+G=nx.Graph()
 
 #iterate through each row of flavorDB based on if index is in random sample
 for index, row in flavorDB_pandas.iterrows():
@@ -53,7 +55,12 @@ for index, row in flavorDB_pandas.iterrows():
         
         if len(set1) < 5:
             for molecule in set1:
-                flavor_matrix_df[ingredient_1][molecule] = {'weight': 1}
+                # flavor_matrix_df[ingredient_1][molecule] = {'weight': 1}
+                G.add_node(ingredient_1)
+                G.node[ingredient_1]["ingredient_node"] = True
+                G.add_node(molecule)
+                G.node[molecule]["molecule_node"] = True
+                G.add_edge(ingredient_1, molecule)
 
 
 
@@ -99,8 +106,8 @@ for index, row in flavorDB_pandas.iterrows():
 
 
 
-with open('small_flavor_matrix_dict_ingredient_node.pickle', 'wb') as file:
-    file.write(pickle.dumps(flavor_matrix_df))
+with open('small_flavor_matrix_graph_ingredient_node.pickle', 'wb') as file:
+    file.write(pickle.dumps(G))
     file.close()
 
 #Celebratory print statement
