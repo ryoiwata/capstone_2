@@ -58,9 +58,9 @@ def random_walk_jacaard_sets(ingredient_1, ingredient_2, iterations = 1000, step
 
 if __name__ == "__main__":
     ingredient_1 = "Mozzarella Cheese"
-    ingredient_2 = "Grape"
-    iterations = 1000
-    steps = 2
+    ingredient_2 = "Mozzarella Cheese"
+    iterations = 10000
+    steps = 100
     random_walk_jacaard_sets(ingredient_1, ingredient_2, iterations, steps)
 
 
