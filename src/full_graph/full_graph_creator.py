@@ -34,6 +34,13 @@ flavorDB_pandas["set_molecules_ID"] = flavorDB_pandas["molecule_IDs"].apply(lamb
 #Creation of the Flavor Matrix
 flavor_matrix_df = defaultdict(dict)
 
+#Lists of ingredients to keep from redundant ingredient cleaner notebook
+keep_these_list = ["Animal Product", "Beverage Caffeinated", "Dairy", "Berry", "Seafood", "Fish", "Fruit", "Fruit Citrus", "Fruit Essence", "Fungus", "Herb", "Meat", "Nut", "Seed", "Legume", "Plant Derivative", "Spice", "Vegetable", "Cabbage", "Vegetable Root", "Vegetable Fruit", "Gourd",  "Vegetable Stem", "Vegetable Tuber", "Additive"]
+consider_this_list = ["Beverage Alcoholic", "Cereal", "Maize", "Essential Oil", "Flower", "Fruit-Berry", "Plant","Additive"]
+list_to_use = keep_these_list + consider_this_list
+
+flavorDB_pandas = flavorDB_pandas[flavorDB_pandas["catgeory"].isin(list_to_use)]
+
 G=nx.Graph()
 
 x = 0
