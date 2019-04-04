@@ -56,6 +56,8 @@ for index, row in flavorDB_pandas.iterrows():
             G.node[molecule]["molecule_node"] = True
             G.add_edge(ingredient_1, molecule)
 
+#writes the pickle into the data file
+#makes it so that needs to be called in src folder
 with open('molecule_full_graph.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
     file.close()
