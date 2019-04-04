@@ -1,8 +1,3 @@
-"""
-https://medium.com/@keithwhor/using-graph-theory-to-build-a-simple-recommendation-engine-in-javascript-ec43394b35a3
-Look at 'Putting it all together section'
-"""
-
 #For graphing
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -23,7 +18,7 @@ pickled_G = pickle.load(pickle_in)
 #Converting a dictionary of dictionaries to a graph
 G = pickled_G
 
-def random_walk_jacaard(ingredient_1, ingredient_2, iterations = 500, steps = 2):
+def random_walk_jacaard_sets(ingredient_1, ingredient_2, iterations = 1000, steps = 2):
 
     random_nodes, random_nodes_2 = set([]), set([])
     #random walk for ingredient 1
@@ -49,24 +44,23 @@ def random_walk_jacaard(ingredient_1, ingredient_2, iterations = 500, steps = 2)
     union = random_nodes.union(random_nodes_2)
     if len(intersection) >= 1:
         jaccard_similarity = len(intersection) / len(union)
-        print("number of items in common: ", len(intersection))
-        print("jaccard similarity: ", jaccard_similarity)
+        # print("intersecting molecules: ", intersection)
+        print("occurances of item 1 in intersection: ", list(intersection).count(ingredient_1))
+        print("occurances of item 2 in intersection: ", list(intersection).count(ingredient_2))
+        print("number of intersections: ", len(intersection))
+        print("jacaard similarity: ", jaccard_similarity)
+        return(jaccard_similarity)
+
     else:
         print("nothing in common!")
 
-    print("ingredients 1 is in the intersection: ", ingredient_1 in intersection)
-    print("ingredients 2 is in the intersection: ", ingredient_2 in intersection)
 
 
-ingredient_1 = "Common Tuna"
-ingredient_2 = "Orange"
-iterations = 500
-steps = 4
-
-random_walk_jacaard(ingredient_1, ingredient_2, iterations, steps)
-
-# print(G["Egg"])
-# print(G.number_of_edges())
-# print(G.number_of_nodes())
+if __name__ == "__main__":
+    ingredient_1 = "Mozzarella Cheese"
+    ingredient_2 = "Mozzarella Cheese"
+    iterations = 10000
+    steps = 100
+    random_walk_jacaard_sets(ingredient_1, ingredient_2, iterations, steps)
 
 
