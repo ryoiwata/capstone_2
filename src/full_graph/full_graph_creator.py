@@ -52,10 +52,11 @@ for index, row in flavorDB_pandas.iterrows():
     #name of the ingredient from the "rows" 
     ingredient_1 = row["ingredient"]
     
-    print(ingredient_1)
-    print(x) #to keep track of what's going on
 
-    if True: # or len(set1) < 5: # To set if you want to consider all ingredients
+
+    if ingredient_1 not in ["Muskmallow", "Storax"]: # because Muskmallow and Storax form disconnected communities 
+        print(ingredient_1)
+        print(x) #to keep track of what's going on
         for molecule in set1:
             G.add_node(ingredient_1)
             G.node[ingredient_1]["ingredient_node"] = True
