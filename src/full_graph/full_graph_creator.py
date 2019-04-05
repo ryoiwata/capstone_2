@@ -34,6 +34,13 @@ flavorDB_pandas["set_molecules_ID"] = flavorDB_pandas["molecule_IDs"].apply(lamb
 #Creation of the Flavor Matrix
 flavor_matrix_df = defaultdict(dict)
 
+#Lists of ingredients to keep from redundant ingredient cleaner notebook
+keep_these_list = ["Animal Product", "Beverage Caffeinated", "Dairy", "Berry", "Seafood", "Fish", "Fruit", "Fruit Citrus", "Fruit Essence", "Fungus", "Herb", "Meat", "Nut", "Seed", "Legume", "Plant Derivative", "Spice", "Vegetable", "Cabbage", "Vegetable Root", "Vegetable Fruit", "Gourd",  "Vegetable Stem", "Vegetable Tuber", "Additive"]
+consider_this_list = ["Beverage Alcoholic", "Cereal", "Maize", "Essential Oil", "Flower", "Fruit-Berry", "Plant","Additive"]
+list_to_use = keep_these_list + consider_this_list
+
+flavorDB_pandas = flavorDB_pandas[flavorDB_pandas["catgeory"].isin(list_to_use)]
+
 G=nx.Graph()
 
 x = 0
@@ -52,8 +59,10 @@ for index, row in flavorDB_pandas.iterrows():
         for molecule in set1:
             G.add_node(ingredient_1)
             G.node[ingredient_1]["ingredient_node"] = True
+            G.node[ingredient_1]["molecule_node"] = False
             G.add_node(molecule)
             G.node[molecule]["molecule_node"] = True
+            G.node[molecule]["ingredient_node"] = False
             G.add_edge(ingredient_1, molecule)
 
 #writes the pickle into the data file
