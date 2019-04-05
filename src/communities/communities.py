@@ -14,11 +14,14 @@ def girvan_newman_step(G):
     """
     init_ncomp = nx.number_connected_components(G)
     ncomp = init_ncomp
+    x = 0
     while ncomp == init_ncomp:
         bw = Counter(nx.edge_betweenness_centrality(G))
         a, b = bw.most_common(1)[0][0]
         G.remove_edge(a, b)
         ncomp = nx.number_connected_components(G)
+        x += 1
+        print("Cut of Girvan Newman: ", x)
 
 
 def find_communities_n(G, n):
@@ -115,12 +118,13 @@ def find_communities_modularities(G, max_iter=None):
     partitions = []
     i = 0
     while G1.number_of_edges() > 0:
+        i += 1
+        print("Iteration: ", i)
         subgraphs = nx.connected_component_subgraphs(G1)
         modularity = get_modularity(subgraphs, degrees, num_edges)
         modularities.append(modularity)
         partitions.append(list(nx.connected_components(G1)))
         girvan_newman_step(G1)
-        i += 1
         if max_iter and i >= max_iter:
             break
     return partitions, modularities
