@@ -20,7 +20,7 @@ pickled_G = pickle.load(pickle_in)
 #Converting a dictionary of dictionaries to a graph
 G = pickled_G
 
-def random_walk_jacaard_lists(ingredient, iterations = 1000, steps = 2, return_prob = 0.9):
+def random_walk_jacaard_lists(ingredient, iterations = 10000, steps = 10, return_prob = 0.001):
     #Where the nodes of the random walk will be placed into
     random_nodes = []
 
@@ -35,21 +35,29 @@ def random_walk_jacaard_lists(ingredient, iterations = 1000, steps = 2, return_p
             
             #return back to the original node at a inputted probability 
             if G.nodes[current_node]["molecule_node"] == True:
-                return_bool = np.random.choice(np.arange(0,1), p=[1 - return_prob, return_prob])
-                print(return_bool)
+                
+                #states if something should return of not given the probability 
+                return_bool = np.random.choice(np.array([0,1]), p=[1 - return_prob, return_prob])
+                
+                #returns back to the original node
                 if return_bool == 1:
                     current_node = ingredient_1  
+
+                #continues exploring other nodes    
                 elif return_bool == 0:
                     number_of_edges = len(G[current_node])
                     random_number = random.randint(0, number_of_edges - 1)
                     current_node = list(G[current_node])[random_number]           
+            
+            #does not return to the original node if the current node is also an ingredient
             else:
                 number_of_edges = len(G[current_node])
                 random_number = random.randint(0, number_of_edges - 1)
                 current_node = list(G[current_node])[random_number]
+        
+        #adds to the list once done
         random_nodes.append(current_node)
-        # print(current_node)
-    # print(random_nodes)
+
     return Counter(random_nodes)
 
 
@@ -57,9 +65,9 @@ def random_walk_jacaard_lists(ingredient, iterations = 1000, steps = 2, return_p
 
 if __name__ == "__main__":
     ingredient_1 = "Mozzarella Cheese"
-    # ingredient_2 = "Chocolate"
     iterations = 10000
     steps = 10
-    print(random_walk_jacaard_lists(ingredient_1, iterations, steps))
+    return_prob = 0.001
+    print(random_walk_jacaard_lists(ingredient_1, iterations, steps, return_prob))
 
 
