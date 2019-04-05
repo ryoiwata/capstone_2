@@ -59,8 +59,11 @@ for index, row in flavorDB_pandas.iterrows():
         for molecule in set1:
             G.add_node(ingredient_1)
             G.node[ingredient_1]["ingredient_node"] = True
+            G.node[ingredient_1]["molecule_node"] = False
             G.add_node(molecule)
             G.node[molecule]["molecule_node"] = True
+            G.node[molecule]["ingredient_node"] = False
+
             G.add_edge(ingredient_1, molecule)
 
 #writes the pickle into the data file
