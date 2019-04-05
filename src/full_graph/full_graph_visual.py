@@ -14,14 +14,28 @@ pickled_G = pickle.load(pickle_in)
 #Converting a dictionary of dictionaries to a graph
 G = pickled_G
 
-print(G.number_of_edges())
-print(G.number_of_nodes())
+print("Number of edges: ", G.number_of_edges())
+print("Number of nodes: ", G.number_of_nodes())
 
-ingredient_nodes = nx.get_node_attributes(G, 'ingredient_node').keys()
-molecule_nodes = nx.get_node_attributes(G, 'molecule_node').keys()
+#returns a dictionary based on attributes
+ingredient_node_attribute = nx.get_node_attributes(G, 'ingredient_node')
+molecule_node_attribute = nx.get_node_attributes(G, 'molecule_node')
 
-print('Ingredient nodes ids: {}'.format(ingredient_nodes))
-# print('Molecule nodes ids: {}'.format(molecule_nodes))
+#list of ingredients
+ingredient_list = []
+for node, boolean in ingredient_node_attribute.items():    
+    if boolean == True:
+        ingredient_list.append(node)
+
+#list of non ingredients
+molecule_list = []
+for node, boolean in molecule_node_attribute.items():   
+    if boolean == True:
+        molecule_list.append(node)
+
+# Print statemenets to verify lists
+# print('Ingredient nodes ids: {}'.format(ingredient_list))
+# print('Molecule nodes ids: {}'.format(molecule_list))
 
 # #Plotting the Graph 
 # fig, ax = plt.subplots(1, 1, figsize=(8, 6))
