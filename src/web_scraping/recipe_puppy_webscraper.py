@@ -25,32 +25,45 @@ pickled_list = pickle.load(pickle_in)
 
 
 
-x = 0 
-for name in pickled_list:
+#see if there is anything on the page
+url = "http://www.recipepuppy.com/?i=sdf&q="
+recipe_puppy_page = requests.get(url)
+soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
+text = soup.find("div", class_ = "right")
+print(text)
+
+
+
+# recipe_puppy_page = requests.get('http://www.recipepuppy.com/?i={}&q='.format(name))
+
+# x = 0 
+# for name in pickled_list:
+
 
     
-    try:
-        #need to incorporate a for loop for each page num of ingredient 
+#     try:
+#         #need to incorporate a for loop for each page num of ingredient 
         
-        if len(name.split()) >= 1:
-            joined_name = "+".join(name.split())
-            recipe_puppy_page = requests.get('http://www.recipepuppy.com/?i={}&q='.format(joined_name))
+#         if len(name.split()) >= 1:
+#             joined_name = "+".join(name.split())
+#             recipe_puppy_page = requests.get('http://www.recipepuppy.com/?i={}&q='.format(joined_name))
 
-        elif len(name.split()) == 0:
-            recipe_puppy_page = requests.get('http://www.recipepuppy.com/?i={}&q='.format(name))
+#         elif len(name.split()) == 0:
+#             recipe_puppy_page = requests.get('http://www.recipepuppy.com/?i={}&q='.format(name))
 
-        #Soup object accesses the HTML of the Request object
-        soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
+#         #Soup object accesses the HTML of the Request object
+#         soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
         
-        for recipe in soup.findAll('div', class_='result'):
-            print("hello!")   
+#         #Goes through each recip in the page
+#         for recipe in soup.findAll('div', class_='result'):
+#             print("hello!")   
 
-        print("It worked!")
-    except:
-        print("Couldn't quite work!")
+#         print("It worked!")
+#     except:
+#         print("Couldn't quite work!")
       
-    #to keep track of progress
-    x += 1
-    print(x)
-    break
+#     #to keep track of progress
+#     x += 1
+#     print(x)
+#     break
 
