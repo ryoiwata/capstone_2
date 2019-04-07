@@ -18,9 +18,6 @@ client = MongoClient()
 database = client['food_map']   # Database name (to connect to)
 collections = database['recipies'] # Collection name (to use)
 
-#for testing purposes 
-collections = database['asldkfj'] # Collection name (to use)
-
 
 #Opening the pickled file
 #Needs to be opened in the recommender folder
@@ -31,7 +28,7 @@ pickled_list = pickle.load(pickle_in)
 
 x = 0
 #looping through each ingredient from the list
-for ingredient in pickled_list[:50]:
+for ingredient in pickled_list:
     #name of the ingredient to query, formating for website query
     #lowercasing, replacing the spaces for pluses
     ing_for_url = "+".join(ingredient.split()).lower()
@@ -63,8 +60,11 @@ for ingredient in pickled_list[:50]:
         #formats the number of results
         num_result = int("".join(num_result.split(",")))
         
-        #gets the number of pages to loop through
-        num_pages = num_result // 10 + 1
+        #only the first 1000 recipes can be queried
+        if num_result > 1000:
+            num_pages = 100
+        else: #gets the number of pages to loop through
+            num_pages = num_result // 10 + 1
         
         #loops through each page of the ingredient
         for page_num in range(1, num_pages + 1):
@@ -100,14 +100,12 @@ for ingredient in pickled_list[:50]:
                 print(result_ing_list)
                 
                 #put the recipes into mongoDB
-                collections.insert_one({"searched_ingredient" : ingredient_name,"recipe_name" : result_name, "recipe_ingredients" : ingredient_name, "recipe_link": result_link})
+                collections.insert_one({"searched_ingredient" : ingredient_name,"recipe_name" : result_name, "recipe_ingredients" : result_ing_list, "recipe_link": result_link})
 
                 #stop breaker in between pages
                 random_num = random.randint(1,10)
                 time.sleep(random_num / 1000)  
             
-
-
 print("all done!")
 
      
