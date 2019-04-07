@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import selenium
 import time
+import re
 
 #for access to databases
 from pymongo import MongoClient
@@ -61,11 +62,33 @@ for ingredient in pickled_list[:5]:
         #gets the number of pages to loop through
         num_pages = num_result // 10 + 1
         
-        for num in range(1, num_pages + 1):
-            pass
-            # print("page number: ", num)
+        #loops through each page of the ingredient
+        for page_num in range(1, num_pages + 1):
+            print("page number: ", page_num)
+            
+            #accessing each page of the ingredient
+            url = "http://www.recipepuppy.com/?i={}&q={}&p={}".format(ing_name, ing_name, page_num)
+            recipe_puppy_page = requests.get(url)
+            soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
 
-        print(num_pages)
+            #getting the name, link, and ingredient list of each recipe
+            for result in soup.findAll('div', class_ = "result"):
+                result_h3 = result.find('h3')
+
+                #name of the result 
+                result_name = result_h3.text.strip()
+                # print(result_name)
+
+                #link of the result
+                result_link = re.findall(r'\"(.+?)\"', str(result_h3))[0].strip()
+                # print(result_link)
+
+                # print(result_link)
+                # result_name = 
+
+                break
+            break
+
         # num_result = soup.findAll('b')
         
 
