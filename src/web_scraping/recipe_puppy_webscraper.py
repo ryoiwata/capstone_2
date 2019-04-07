@@ -23,7 +23,16 @@ pickle_in = open("./ingredient_full_list.pickle","rb")
 #Getting the dictionary from the pickle
 pickled_list = pickle.load(pickle_in)
 
+#looping through each ingredient from the list
+for ingredient in pickled_list:
+    #name of the ingredient to query, formating for website query
+    #lowercasing, replacing the spaces for pluses
+    ing_name = "+".join(ingredient.split()).lower()
+    print(ing_name)
 
+
+
+"""
 
 #see if there is anything on the page
 url = "http://www.recipepuppy.com/?i=sdf&q="
@@ -32,7 +41,7 @@ soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
 text = soup.find("div", class_ = "right")
 print(text)
 
-
+"""
 
 # recipe_puppy_page = requests.get('http://www.recipepuppy.com/?i={}&q='.format(name))
 
