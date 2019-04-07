@@ -29,17 +29,18 @@ x = 0
 for ingredient in pickled_list[:5]:
     #name of the ingredient to query, formating for website query
     #lowercasing, replacing the spaces for pluses
-    ing_name = "+".join(ingredient.split()).lower()
-    
+    ing_for_url = "+".join(ingredient.split()).lower()
+    ingredient_name = ingredient.strip().lower()
+
     #for testing purposes, remove afterwards
-    # ing_name = "gfdfj"
+    # ing_for_url = "gfdfj"
 
     # to check progress of scraper
     x += 1
-    print(x)
-    print(ing_name)
+    print("current ingredient number: ", x)
+    print("current ingredient: ", ingredient_name)
     
-    url = "http://www.recipepuppy.com/?i={}&q={}".format(ing_name, ing_name)
+    url = "http://www.recipepuppy.com/?i={}&q={}".format(ing_for_url, ing_for_url)
     recipe_puppy_page = requests.get(url)
     soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
 
@@ -67,7 +68,7 @@ for ingredient in pickled_list[:5]:
             print("page number: ", page_num)
             
             #accessing each page of the ingredient
-            url = "http://www.recipepuppy.com/?i={}&q={}&p={}".format(ing_name, ing_name, page_num)
+            url = "http://www.recipepuppy.com/?i={}&q={}&p={}".format(ing_for_url, ing_for_url, page_num)
             recipe_puppy_page = requests.get(url)
             soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
 
@@ -83,28 +84,25 @@ for ingredient in pickled_list[:5]:
                 result_link = re.findall(r'\"(.+?)\"', str(result_h3))[0].strip()
                 # print(result_link)
 
-                # print(result_link)
-                # result_name = 
+                #a list of all the ingredients in a recipe
+                result_ing_list = [ingredient_name]
+                for recipe_ing in result.find('div', class_ = "ings").findAll('a'):
+                    recipe_ing_name = recipe_ing.text.strip("+")
+                    result_ing_list.append(recipe_ing_name)
+                result_ing_list.sort()
+                
+                print("things we want")
+                print("")
+                print("")
+                print("")
 
+                """
+                put searched ingredient, name, link, and recipe all into mongo db
+                test on ingredient with few results
+                """
                 break
             break
 
-        # num_result = soup.findAll('b')
-        
-
-        # print(num_result.text)
-        #printing out the number of the results
-        
-    # break
-        # for num in range(1,5): # will need to incorporate looping through each page
-        #         # to check progress of scraper
-        #         print("page: {}".format(num))
-        #         url = "http://www.recipepuppy.com/?i={}&q={}&p={}".format(ing_name, ing_name, num)
-        #         print(url)
-
-        #         #access the page
-        #         recipe_puppy_page = requests.get(url)
-        #         soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
-    
+     
 
 
