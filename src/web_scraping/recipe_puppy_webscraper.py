@@ -54,57 +54,64 @@ for ingredient in pickled_list:
             print("No results here")
             continue
     except: #if query exists we'll loop through each page of the ingredients
-        #scrapes the number of results
-        num_result = soup.find('div', class_='searchStats').find_all('b')[1].text
+        try:
+            #scrapes the number of results
+            num_result = soup.find('div', class_='searchStats').find_all('b')[1].text
 
-        #formats the number of results
-        num_result = int("".join(num_result.split(",")))
-        
-        #only the first 1000 recipes can be queried
-        if num_result > 1000:
-            num_pages = 100
-        else: #gets the number of pages to loop through
-            num_pages = num_result // 10 + 1
-        
-        #loops through each page of the ingredient
-        for page_num in range(1, num_pages + 1):
-            print("page number: ", page_num)
+            #formats the number of results
+            num_result = int("".join(num_result.split(",")))
             
-            #accessing each page of the ingredient
-            url = "http://www.recipepuppy.com/?i={}&q={}&p={}".format(ing_for_url, ing_for_url, page_num)
-            recipe_puppy_page = requests.get(url)
-            soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
-
-            #getting the name, link, and ingredient list of each recipe
-            for result in soup.findAll('div', class_ = "result"):
-                result_h3 = result.find('h3')
-
-                #name of the result 
-                result_name = result_h3.text.strip()
-                # print(result_name)
-
-                #link of the result
-                result_link = re.findall(r'\"(.+?)\"', str(result_h3))[0].strip()
-                # print(result_link)
-
-                #a list of all the ingredients in a recipe
-                result_ing_list = [ingredient_name]
-                for recipe_ing in result.find('div', class_ = "ings").findAll('a'):
-                    recipe_ing_name = recipe_ing.text.strip("+")
-                    result_ing_list.append(recipe_ing_name)
-                result_ing_list.sort()
+            #only the first 1000 recipes can be queried
+            if num_result > 1000:
+                num_pages = 100
+            else: #gets the number of pages to loop through
+                num_pages = num_result // 10 + 1
+            
+            #loops through each page of the ingredient
+        except:
+            pass
+        try:
+            for page_num in range(1, num_pages + 1):
+                print("page number: ", page_num)
                 
-                print(ingredient_name)
-                print(result_name)
-                print(result_link)
-                print(result_ing_list)
-                
-                #put the recipes into mongoDB
-                collections.insert_one({"searched_ingredient" : ingredient_name,"recipe_name" : result_name, "recipe_ingredients" : result_ing_list, "recipe_link": result_link})
+                #accessing each page of the ingredient
+                url = "http://www.recipepuppy.com/?i={}&q={}&p={}".format(ing_for_url, ing_for_url, page_num)
+                recipe_puppy_page = requests.get(url)
+                soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
 
-                #stop breaker in between pages
-                random_num = random.randint(1,10)
-                time.sleep(random_num / 1000)  
+                #getting the name, link, and ingredient list of each recipe
+                for result in soup.findAll('div', class_ = "result"):
+                    result_h3 = result.find('h3')
+
+                    #name of the result 
+                    result_name = result_h3.text.strip()
+                    # print(result_name)
+
+                    #link of the result
+                    result_link = re.findall(r'\"(.+?)\"', str(result_h3))[0].strip()
+                    # print(result_link)
+
+                    #a list of all the ingredients in a recipe
+                    result_ing_list = [ingredient_name]
+                    for recipe_ing in result.find('div', class_ = "ings").findAll('a'):
+                        recipe_ing_name = recipe_ing.text.strip("+")
+                        result_ing_list.append(recipe_ing_name)
+                    result_ing_list.sort()
+                    
+                    print(ingredient_name)
+                    print(result_name)
+                    print(result_link)
+                    print(result_ing_list)
+                    
+                    #put the recipes into mongoDB
+                    collections.insert_one({"searched_ingredient" : ingredient_name,"recipe_name" : result_name, "recipe_ingredients" : result_ing_list, "recipe_link": result_link})
+
+                    #stop breaker in between pages
+                    random_num = random.randint(1,10)
+                    time.sleep(random_num / 1000)  
+        except:
+            pass
+        
             
 print("all done!")
 
