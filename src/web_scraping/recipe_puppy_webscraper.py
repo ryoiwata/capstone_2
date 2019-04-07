@@ -52,19 +52,36 @@ for ingredient in pickled_list[:5]:
             print("No results here")
             continue
     except: #if query exists we'll loop through each page of the ingredients
-        num_result = soup.find('div', class_='searchStats')
-        """
-        MAKE SURE TO BE ABLE TO GET THE NUMBER OF RESULTS
-        """
-        for num in range(1,5): # will need to incorporate looping through each page
-                # to check progress of scraper
-                print("page: {}".format(num))
-                url = "http://www.recipepuppy.com/?i={}&q={}&p={}".format(ing_name, ing_name, num)
-                print(url)
+        #scrapes the number of results
+        num_result = soup.find('div', class_='searchStats').find_all('b')[1].text
 
-                #access the page
-                recipe_puppy_page = requests.get(url)
-                soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
+        #formats the number of results
+        num_result = int("".join(num_result.split(",")))
+        
+        #gets the number of pages to loop through
+        num_pages = num_result // 10 + 1
+        
+        for num in range(1, num_pages + 1):
+            pass
+            # print("page number: ", num)
+
+        print(num_pages)
+        # num_result = soup.findAll('b')
+        
+
+        # print(num_result.text)
+        #printing out the number of the results
+        
+    # break
+        # for num in range(1,5): # will need to incorporate looping through each page
+        #         # to check progress of scraper
+        #         print("page: {}".format(num))
+        #         url = "http://www.recipepuppy.com/?i={}&q={}&p={}".format(ing_name, ing_name, num)
+        #         print(url)
+
+        #         #access the page
+        #         recipe_puppy_page = requests.get(url)
+        #         soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
     
 
 
