@@ -5,6 +5,7 @@ from selenium import webdriver
 import selenium
 import time
 import re
+import random
 
 #for access to databases
 from pymongo import MongoClient
@@ -17,6 +18,10 @@ client = MongoClient()
 database = client['food_map']   # Database name (to connect to)
 collections = database['recipies'] # Collection name (to use)
 
+#for testing purposes 
+collections = database['asldkfj'] # Collection name (to use)
+
+
 #Opening the pickled file
 #Needs to be opened in the recommender folder
 pickle_in = open("./ingredient_full_list.pickle","rb")
@@ -26,20 +31,18 @@ pickled_list = pickle.load(pickle_in)
 
 x = 0
 #looping through each ingredient from the list
-for ingredient in pickled_list[:5]:
+for ingredient in pickled_list[:50]:
     #name of the ingredient to query, formating for website query
     #lowercasing, replacing the spaces for pluses
     ing_for_url = "+".join(ingredient.split()).lower()
     ingredient_name = ingredient.strip().lower()
-
-    #for testing purposes, remove afterwards
-    # ing_for_url = "gfdfj"
 
     # to check progress of scraper
     x += 1
     print("current ingredient number: ", x)
     print("current ingredient: ", ingredient_name)
     
+
     url = "http://www.recipepuppy.com/?i={}&q={}".format(ing_for_url, ing_for_url)
     recipe_puppy_page = requests.get(url)
     soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
@@ -91,17 +94,21 @@ for ingredient in pickled_list[:5]:
                     result_ing_list.append(recipe_ing_name)
                 result_ing_list.sort()
                 
-                print("things we want")
-                print("")
-                print("")
-                print("")
+                print(ingredient_name)
+                print(result_name)
+                print(result_link)
+                print(result_ing_list)
+                
+                #put the recipes into mongoDB
+                collections.insert_one({"searched_ingredient" : ingredient_name,"recipe_name" : result_name, "recipe_ingredients" : ingredient_name, "recipe_link": result_link})
 
-                """
-                put searched ingredient, name, link, and recipe all into mongo db
-                test on ingredient with few results
-                """
-                break
-            break
+                #stop breaker in between pages
+                random_num = random.randint(1,10)
+                time.sleep(random_num / 1000)  
+            
+
+
+print("all done!")
 
      
 
