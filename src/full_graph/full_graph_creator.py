@@ -17,7 +17,6 @@ import _pickle as pickle
 #Libraries for Graph
 import networkx as nx
 
-
 #accessing mongoDB
 client = MongoClient()
 database = client['food_map']   # Database name (to connect to)
@@ -43,7 +42,7 @@ flavorDB_pandas = flavorDB_pandas[flavorDB_pandas["catgeory"].isin(list_to_use)]
 
 #Importing a set that has all the ingredients with recipes
 #Opening the pickled file
-pickle_in = open("ingredients_with_recipes.pickle","rb")
+pickle_in = open("./data/ingredients_with_recipes.pickle","rb")
 #Getting the dictionary from the pickle
 set_of_ing_with_recipe = pickle.load(pickle_in)
 
@@ -75,14 +74,14 @@ for index, row in flavorDB_pandas.iterrows():
 
 #writes the pickle into the data file
 #makes it so that needs to be called in src folder
-with open('molecule_full_graph.pickle', 'wb') as file:
+with open('./data/molecule_full_graph.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
     file.close()
 
 list_of_ingredients = list(flavorDB_pandas["ingredient"])
 #writes the pickle into the data file
 #makes it so that needs to be called in src folder
-with open('ingredient_full_list.pickle', 'wb') as file:
+with open('./data/ingredient_full_list.pickle', 'wb') as file:
     file.write(pickle.dumps(list_of_ingredients))
     file.close()
 
