@@ -54,7 +54,7 @@ for index, row in flavorDB_pandas.iterrows():
         #set the value as the number of shared molecules
         flavor_matrix_df[ingredient_1][ingredient_2] = len(shared_molecules)       
 
-with open('flavor_matrix_dict.pickle', 'wb') as file:
+with open('./data/ingredients/flavor_matrix_dict.pickle', 'wb') as file:
     file.write(pickle.dumps(flavor_matrix_df))
     file.close()
 
