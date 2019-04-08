@@ -19,10 +19,9 @@ client = MongoClient()
 database = client['food_map']   # Database name (to connect to)
 collections = database['recipes'] # Collection name (to use)
 
-
-#Opening the pickled file
-#Needs to be opened in the recommender folder
-pickle_in = open("./ingredient_full_list.pickle","rb")
+#Opening the pickled file that has the list of all ingredients from FlavorDB
+#This file needs to be run in the root directory, food map 
+pickle_in = open("./data/ingredients/ingredient_full_list.pickle","rb")
 
 #Getting the dictionary from the pickle
 pickled_list = pickle.load(pickle_in)
@@ -116,6 +115,5 @@ for ingredient in pickled_list:
                     time.sleep(random_num / 1000)  
         except:
             continue
-        
-            
+                 
 print("all done!")
