@@ -76,9 +76,7 @@ for index, row in flavorDB_pandas.iterrows():
                         flavor_matrix_df[ingredient_1][ingredient_2] = {'shared_molecules': len(shared_molecules)}       
                 
 #put it into a pickle
-with open('ingredient_subset_dict.pickle', 'wb') as file:
+with open('./data/ingredients/ingredient_subset_dict.pickle', 'wb') as file:
     file.write(pickle.dumps(flavor_matrix_df))
     file.close()
 
-#Celebratory print statement
-print("we did it!")
