@@ -25,27 +25,36 @@ collections_recipe = database['recipes']
 recipe_puppy_pandas = pd.DataFrame(list(collections_recipe.find()))
 #dropping duplicates
 recipe_puppy_pandas = recipe_puppy_pandas.drop_duplicates(subset= "recipe_name", keep="last")
+num_recipes = len(recipe_puppy_pandas["recipe_name"])
+print(num_recipes)
 
 #Initializing the Graph
 G=nx.Graph()
 
+#to keep track of which recipe we are on 
+recipe_num = 0
+
 #iterate through each recipe
 for index, row in recipe_puppy_pandas.iterrows():
+    recipe_num += 1
+    print("Recipe Progress: ", recipe_num / num_recipes)
+    
     ingredient_list = row["recipe_ingredients"]
     
     # to keep track of the indexes
     x = 1
-
+    
     #iterate through each ingredient of the recipe
     for ingredient_1 in ingredient_list:
-        print("first ingredient: ", ingredient_1)
+
+        # print("first ingredient: ", ingredient_1)
         G.add_node(ingredient_1)
         G.node[ingredient_1]["ingredient_node"] = True
         G.node[ingredient_1]["molecule_node"] = False
         
         #make an edge to connect the two ingredients
         for ingredient_2 in ingredient_list[x:]:
-            print("second ingredient: ", ingredient_2)
+            # print("second ingredient: ", ingredient_2)
             G.add_node(ingredient_2)
             G.node[ingredient_2]["ingredient_node"] = True
             G.node[ingredient_2]["molecule_node"] = False
@@ -53,7 +62,6 @@ for index, row in recipe_puppy_pandas.iterrows():
                 G.add_edge(ingredient_1, ingredient_2, weight = 1)
             else:
                 G[ingredient_1][ingredient_2]["weight"] += 1
-                print("it worked!")
         
         #change the index to match the new first ingredient
         x += 1
@@ -61,15 +69,10 @@ for index, row in recipe_puppy_pandas.iterrows():
         #break if it's the last ingredient
         if x == len(ingredient_list):
             break
-    # print(ingredient_list)
-
-print(G.edges(data=True))
 
 
-"""
 #writes the pickle into the data file
 #makes it so that needs to be called in src folder
 with open('recipe_graph.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
     file.close()
-"""
