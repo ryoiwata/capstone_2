@@ -15,7 +15,7 @@ import random
 
 #Opening the pickled file
 #Needs to be opened in the recommender folder
-pickle_in = open("./../../data/graph/molecule_full_graph.pickle","rb")
+pickle_in = open("./data/graph/molecule_full_graph.pickle","rb")
 
 #Getting the dictionary from the pickle
 pickled_G = pickle.load(pickle_in)
@@ -58,7 +58,7 @@ def random_walk_jacaard(ingredient_1, ingredient_2, iterations = 500, steps = 2)
     print("ingredients 2 is in the intersection: ", ingredient_2 in intersection)
 
 
-ingredient_1 = "Common Tuna"
+ingredient_1 = "Coffee"
 ingredient_2 = "Orange"
 iterations = 500
 steps = 4
