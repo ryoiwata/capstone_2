@@ -52,10 +52,9 @@ for index, row in flavorDB_pandas.iterrows():
     #name of the ingredient from the "rows" 
     ingredient_1 = row["ingredient"]
     
-    print(ingredient_1)
-    print(x) #to keep track of what's going on
-
-    if True: # or len(set1) < 5: # To set if you want to consider all ingredients
+    if ingredient_1 not in ["Muskmallow", "Storax"]: # because Muskmallow and Storax form disconnected communities 
+        print(ingredient_1)
+        print(x) #to keep track of what's going on
         for molecule in set1:
             G.add_node(ingredient_1)
             G.node[ingredient_1]["ingredient_node"] = True
@@ -69,6 +68,13 @@ for index, row in flavorDB_pandas.iterrows():
 #makes it so that needs to be called in src folder
 with open('molecule_full_graph.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
+    file.close()
+
+list_of_ingredients = list(flavorDB_pandas["ingredient"])
+#writes the pickle into the data file
+#makes it so that needs to be called in src folder
+with open('ingredient_full_list.pickle', 'wb') as file:
+    file.write(pickle.dumps(list_of_ingredients))
     file.close()
 
 #Celebratory print statement
