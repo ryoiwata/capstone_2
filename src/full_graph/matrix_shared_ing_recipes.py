@@ -73,6 +73,6 @@ for index, row in recipe_puppy_pandas.iterrows():
 
 #writes the pickle into the data file
 #makes it so that needs to be called in src folder
-with open('recipe_graph.pickle', 'wb') as file:
+with open('./data/graph/recipe_graph.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
     file.close()

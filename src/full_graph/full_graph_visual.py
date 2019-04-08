@@ -6,7 +6,7 @@ import networkx as nx
 import pickle
 
 #Opening the pickled file
-pickle_in = open("molecule_full_graph.pickle","rb")
+pickle_in = open("./data/graph/molecule_full_graph.pickle","rb")
 
 #Getting the dictionary from the pickle
 pickled_G = pickle.load(pickle_in)
