@@ -41,6 +41,15 @@ list_to_use = keep_these_list + consider_this_list
 
 flavorDB_pandas = flavorDB_pandas[flavorDB_pandas["catgeory"].isin(list_to_use)]
 
+#Importing a set that has all the ingredients with recipes
+#Opening the pickled file
+pickle_in = open("ingredients_with_recipes.pickle","rb")
+#Getting the dictionary from the pickle
+set_of_ing_with_recipe = pickle.load(pickle_in)
+
+
+
+
 G=nx.Graph()
 
 x = 0
@@ -52,7 +61,7 @@ for index, row in flavorDB_pandas.iterrows():
     #name of the ingredient from the "rows" 
     ingredient_1 = row["ingredient"]
     
-    if ingredient_1 not in ["Muskmallow", "Storax"]: # because Muskmallow and Storax form disconnected communities 
+    if ingredient_1.lower() in set_of_ing_with_recipe : #to filter out ingredients that only have recipes from Puppy Recipe API 
         print(ingredient_1)
         print(x) #to keep track of what's going on
         for molecule in set1:
@@ -79,3 +88,4 @@ with open('ingredient_full_list.pickle', 'wb') as file:
 
 #Celebratory print statement
 print("we did it!")
+

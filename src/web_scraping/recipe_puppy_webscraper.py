@@ -1,3 +1,4 @@
+
 #for webscraping
 import requests
 from bs4 import BeautifulSoup
@@ -16,7 +17,7 @@ import pickle
 # Create instance of the MongoClient class
 client = MongoClient()
 database = client['food_map']   # Database name (to connect to)
-collections = database['recipe'] # Collection name (to use)
+collections = database['recipes'] # Collection name (to use)
 
 
 #Opening the pickled file
@@ -118,7 +119,3 @@ for ingredient in pickled_list:
         
             
 print("all done!")
-
-     
-
-
