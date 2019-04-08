@@ -16,7 +16,7 @@ import pickle
 # Create instance of the MongoClient class
 client = MongoClient()
 database = client['food_map']   # Database name (to connect to)
-collections = database['recipies'] # Collection name (to use)
+collections = database['recipe'] # Collection name (to use)
 
 
 #Opening the pickled file
@@ -29,20 +29,24 @@ pickled_list = pickle.load(pickle_in)
 x = 0
 #looping through each ingredient from the list
 for ingredient in pickled_list:
-    #name of the ingredient to query, formating for website query
-    #lowercasing, replacing the spaces for pluses
-    ing_for_url = "+".join(ingredient.split()).lower()
-    ingredient_name = ingredient.strip().lower()
+    try:
+        #name of the ingredient to query, formating for website query
+        #lowercasing, replacing the spaces for pluses
+        ing_for_url = "+".join(ingredient.split()).lower()
+        ingredient_name = ingredient.strip().lower()
 
-    # to check progress of scraper
-    x += 1
-    print("current ingredient number: ", x)
-    print("current ingredient: ", ingredient_name)
-    
+        # to check progress of scraper
+        x += 1
+        print("current ingredient number: ", x)
+        print("current ingredient: ", ingredient_name)
+        
 
-    url = "http://www.recipepuppy.com/?i={}&q={}".format(ing_for_url, ing_for_url)
-    recipe_puppy_page = requests.get(url)
-    soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
+        url = "http://www.recipepuppy.com/?i={}&q={}".format(ing_for_url, ing_for_url)
+        recipe_puppy_page = requests.get(url)
+        soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
+    except:
+        print("error")
+        continue
 
     try:
         #See if the query exists, we are looking for the word "sorry" in text
@@ -69,7 +73,7 @@ for ingredient in pickled_list:
             
             #loops through each page of the ingredient
         except:
-            pass
+            continue
         try:
             for page_num in range(1, num_pages + 1):
                 print("page number: ", page_num)
@@ -94,7 +98,7 @@ for ingredient in pickled_list:
                     #a list of all the ingredients in a recipe
                     result_ing_list = [ingredient_name]
                     for recipe_ing in result.find('div', class_ = "ings").findAll('a'):
-                        recipe_ing_name = recipe_ing.text.strip("+")
+                        recipe_ing_name = recipe_ing.text.strip("+").strip()
                         result_ing_list.append(recipe_ing_name)
                     result_ing_list.sort()
                     
@@ -110,7 +114,7 @@ for ingredient in pickled_list:
                     random_num = random.randint(1,10)
                     time.sleep(random_num / 1000)  
         except:
-            pass
+            continue
         
             
 print("all done!")
