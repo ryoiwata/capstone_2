@@ -6,14 +6,11 @@ import networkx as nx
 import pickle
 
 #Opening the pickled file
-pickle_in = open("ingredient_subset_dict.pickle","rb")
+pickle_in = open("./data/ingredients/ingredient_subset_dict.pickle","rb")
 
 #Getting the dictionary from the pickle
 flavor_matrix_dict = pickle.load(pickle_in)
-
-print(flavor_matrix_dict)
-
-
+# print(flavor_matrix_dict)
 
 #Converting a dictionary of dictionaries to a graph
 G = nx.from_dict_of_dicts(flavor_matrix_dict)
