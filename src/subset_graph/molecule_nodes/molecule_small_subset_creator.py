@@ -68,9 +68,6 @@ for index, row in flavorDB_pandas.iterrows():
                 G.node[molecule]["molecule_node"] = True
                 G.add_edge(ingredient_1, molecule)
 
-with open('molecule_subset_graph.pickle', 'wb') as file:
+with open('./data/graph/molecule_subset_graph.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
     file.close()
-
-#Celebratory print statement
-print("we did it!")
