@@ -26,7 +26,8 @@ recipe_puppy_pandas = pd.DataFrame(list(collections_recipe.find()))
 #dropping duplicates
 recipe_puppy_pandas = recipe_puppy_pandas.drop_duplicates(subset= "recipe_name", keep="last")
 
-all_ingredient_list = []
+#Initializing the Graph
+G=nx.Graph()
 
 #iterate through each recipe
 for index, row in recipe_puppy_pandas.iterrows():
@@ -38,17 +39,31 @@ for index, row in recipe_puppy_pandas.iterrows():
     #iterate through each ingredient of the recipe
     for ingredient_1 in ingredient_list:
         print("first ingredient: ", ingredient_1)
+        G.add_node(ingredient_1)
+        G.node[ingredient_1]["ingredient_node"] = True
+        G.node[ingredient_1]["molecule_node"] = False
+        
+        #make an edge to connect the two ingredients
         for ingredient_2 in ingredient_list[x:]:
             print("second ingredient: ", ingredient_2)
+            G.add_node(ingredient_2)
+            G.node[ingredient_2]["ingredient_node"] = True
+            G.node[ingredient_2]["molecule_node"] = False
+            if G.get_edge_data(ingredient_1, ingredient_2) == None:
+                G.add_edge(ingredient_1, ingredient_2, weight = 1)
+            else:
+                G[ingredient_1][ingredient_2]["weight"] += 1
+                print("it worked!")
+        
+        #change the index to match the new first ingredient
         x += 1
+        
+        #break if it's the last ingredient
         if x == len(ingredient_list):
             break
-
-    
     # print(ingredient_list)
-    break
 
-
+print(G.edges(data=True))
 
 
 """
