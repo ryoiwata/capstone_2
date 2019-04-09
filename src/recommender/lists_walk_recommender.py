@@ -41,7 +41,7 @@ def random_walk_jacaard_lists(ingredient, iterations = 10000, steps = 10, return
                 
                 #returns back to the original node
                 if return_bool == 1:
-                    current_node = ingredient_1  
+                    current_node = ingredient  
 
                 #continues exploring other nodes    
                 elif return_bool == 0:
@@ -64,7 +64,7 @@ def random_walk_jacaard_lists(ingredient, iterations = 10000, steps = 10, return
 
 
 if __name__ == "__main__":
-    ingredient_1 = "Mozzarella Cheese"
+    ingredient_1 = "mozzarella cheese"
     iterations = 10000
     steps = 10
     return_prob = 0.001
