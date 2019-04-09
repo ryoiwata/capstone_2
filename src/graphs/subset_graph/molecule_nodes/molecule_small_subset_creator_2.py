@@ -29,32 +29,20 @@ for index, row1 in sample_pd.iterrows():
     #ingredient name
     ingredient_1 = row1["ingredient"]
     #ingredient category
-    category_1 = row1["category"]
-    molecules_1 = row1["set_molecules"]
+    category = row1["category"]
+    molecules = row1["set_molecules"]
 
     G.add_node(ingredient_1)
     G.node[ingredient_1]["ingredient_node"] = True
     G.node[ingredient_1]["molecule_node"] = False
-    G.node[ingredient_1]["category"] = category_1
+    G.node[ingredient_1]["category"] = category
 
-    for index, row2 in sample_pd.iterrows():
-        ingredient_2 = row2["ingredient"]
-        
-        #checks to see if ingredients are different
-        if ingredient_1 != ingredient_2:
-            G.add_node(ingredient_1)
-            category_2 = row2["category"]
-            molecules_2 = row2["set_molecules"]
+    for molecule in molecules:
+        G.add_node(molecule)
+        G.node[molecule]["molecule_node"] = True
+        G.node[molecule]["ingredient_node"] = False
+        G.add_edge(ingredient_1, molecule)
 
-            G.node[ingredient_1]["ingredient_node"] = True
-            G.node[ingredient_1]["molecule_node"] = False
-            G.node[ingredient_1]["category"] = category_2
-            
-            num_intersection = len(molecules_1.intersection(molecules_2))
-
-            if num_intersection >= 1:
-                G.add_edge(ingredient_1, ingredient_2, weight=num_intersection)
-
-with open('./data/graph/ingredient_subset_graph.pickle', 'wb') as file:
+with open('./data/graph/molecule_subset_graph.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
     file.close()

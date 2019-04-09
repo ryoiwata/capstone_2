@@ -19,7 +19,9 @@ pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
 
 #Getting the dictionary from the pickle
 ingredient_only_pd = pickle.load(pickle_in)
-sample_pd = ingredient_only_pd.sample(n= 5, random_state = 30)
+sample_pd = ingredient_only_pd.sample(n= 50, random_state = 999)
+# sample_pd = ingredient_only_pd.sample(n= 50, random_state = 10)
+
 
 #Initializing Graph
 G=nx.Graph()
@@ -31,7 +33,8 @@ for index, row1 in sample_pd.iterrows():
     #ingredient category
     category_1 = row1["category"]
     molecules_1 = row1["set_molecules"]
-
+    if len(molecules_1) > 5:
+        continue
     G.add_node(ingredient_1)
     G.node[ingredient_1]["ingredient_node"] = True
     G.node[ingredient_1]["molecule_node"] = False
@@ -45,7 +48,8 @@ for index, row1 in sample_pd.iterrows():
             G.add_node(ingredient_1)
             category_2 = row2["category"]
             molecules_2 = row2["set_molecules"]
-
+            if len(molecules_2) > 5:
+                continue
             G.node[ingredient_1]["ingredient_node"] = True
             G.node[ingredient_1]["molecule_node"] = False
             G.node[ingredient_1]["category"] = category_2
