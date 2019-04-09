@@ -19,8 +19,8 @@ pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
 
 #Getting the dictionary from the pickle
 ingredient_only_pd = pickle.load(pickle_in)
-sample_pd = ingredient_only_pd.sample(n= 50, random_state = 999)
-# sample_pd = ingredient_only_pd.sample(n= 50, random_state = 10)
+sample_pd = ingredient_only_pd.sample(n= 50, random_state = 1)
+
 
 #Initializing Graph
 G=nx.Graph()
