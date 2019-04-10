@@ -1,4 +1,3 @@
-
 """
 Takes entire data, and then makes a graph based off of nodes of ingredients and molecules
 """
@@ -19,27 +18,25 @@ pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
 
 #Getting the dictionary from the pickle
 ingredient_only_pd = pickle.load(pickle_in)
-sample_pd = ingredient_only_pd.sample(n= 50, random_state = 1)
 
 
 #Initializing Graph
 G=nx.Graph()
 
 #iterate through each row of flavorDB 
-for index, row1 in sample_pd.iterrows():
+for index, row1 in ingredient_only_pd.iterrows():
     #ingredient name
     ingredient_1 = row1["ingredient"]
     #ingredient category
     category_1 = row1["category"]
     molecules_1 = row1["set_molecules"]
-    if len(molecules_1) > 5:
-        continue
+
     G.add_node(ingredient_1)
     G.node[ingredient_1]["ingredient_node"] = True
     G.node[ingredient_1]["molecule_node"] = False
     G.node[ingredient_1]["category"] = category_1
 
-    for index, row2 in sample_pd.iterrows():
+    for index, row2 in ingredient_only_pd.iterrows():
         ingredient_2 = row2["ingredient"]
         
         #checks to see if ingredients are different
@@ -47,8 +44,7 @@ for index, row1 in sample_pd.iterrows():
             G.add_node(ingredient_1)
             category_2 = row2["category"]
             molecules_2 = row2["set_molecules"]
-            if len(molecules_2) > 5:
-                continue
+
             G.node[ingredient_1]["ingredient_node"] = True
             G.node[ingredient_1]["molecule_node"] = False
             G.node[ingredient_1]["category"] = category_2
@@ -58,6 +54,6 @@ for index, row1 in sample_pd.iterrows():
             if num_intersection >= 1:
                 G.add_edge(ingredient_1, ingredient_2, weight=num_intersection)
 
-with open('./data/graph/ingredient_subset_graph.pickle', 'wb') as file:
+with open('./data/graph/ingredient_full_graph.pickle', 'wb') as file:
     file.write(pickle.dumps(G))
     file.close()

@@ -56,10 +56,10 @@ for num in range(0,973):
         # set_molecule_ids = frozenset(list_molecule_id)
 
         # Insert everything into MondoDB
-        collections.insert_one({"ingredient": ingredient_name, "catgeory": category_name, "molecules": list_molecule_names, "molecule_IDs": list_molecule_id, "flavor_of_molecules": list_molecule_flavor})
+        collections.insert_one({"ingredient": ingredient_name, "category": category_name, "molecules": list_molecule_names, "molecule_IDs": list_molecule_id, "flavor_of_molecules": list_molecule_flavor})
         
         #Print Statement to Check What's Going On
-        data = collections.find_one({"ingredient": ingredient_name}, {"ingredient", "catgeory", "molecules", "molecule_IDs"})
+        data = collections.find_one({"ingredient": ingredient_name}, {"ingredient", "category", "molecules", "molecule_IDs"})
         print(data)
     
     #An except statement if something happens and add to the list of entries to redo

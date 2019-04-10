@@ -12,7 +12,7 @@ import numpy as np
 
 #Opening the pickled file
 #Needs to be opened in the recommender folder
-pickle_in = open("./data/graph/molecule_full_graph.pickle","rb")
+pickle_in = open("./data/graph/recipe_graph.pickle","rb")
 
 #Getting the dictionary from the pickle
 pickled_G = pickle.load(pickle_in)
@@ -20,7 +20,7 @@ pickled_G = pickle.load(pickle_in)
 #Converting a dictionary of dictionaries to a graph
 G = pickled_G
 
-def random_walk_jacaard_lists(ingredient, iterations = 10000, steps = 10, return_prob = 0.001):
+def recipe_random_walk(ingredient, iterations = 10000, steps = 10, return_prob = 0.001):
     #Where the nodes of the random walk will be placed into
     random_nodes = []
 
@@ -61,13 +61,9 @@ def random_walk_jacaard_lists(ingredient, iterations = 10000, steps = 10, return
     return Counter(random_nodes)
 
 
-
-
 if __name__ == "__main__":
-    ingredient_1 = "mozzarella cheese"
+    ingredient_1 = "celery"
     iterations = 10000
-    steps = 10
+    steps = 3
     return_prob = 0.001
-    print(random_walk_jacaard_lists(ingredient_1, iterations, steps, return_prob))
-
-
+    print(recipe_random_walk(ingredient_1, iterations, steps, return_prob))
