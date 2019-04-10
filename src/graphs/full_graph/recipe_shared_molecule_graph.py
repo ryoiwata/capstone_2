@@ -64,7 +64,7 @@ recipe_num = 0
 #iterate through each recipe
 for index, row in recipe_puppy_pandas.iterrows():
     recipe_num += 1
-    if recipe_num // 1000 == 0:
+    if recipe_num % 1000 == 0:
         print("currently on: ", recipe_num/ len(recipe_puppy_pandas["recipe_name"]))
 
     ingredient_list = row["recipe_ingredients"]
