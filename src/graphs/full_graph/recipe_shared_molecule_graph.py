@@ -60,13 +60,13 @@ G=nx.Graph()
 
 #to keep track of which recipe we are on 
 recipe_num = 0
-num_recipes = len(recipe_puppy_pandas["recipe_name"])
 
 #iterate through each recipe
 for index, row in recipe_puppy_pandas.iterrows():
     recipe_num += 1
-    print("Recipe Progress: ", recipe_num / num_recipes)
-    
+    if recipe_num // 1000 == 0:
+        print("currently on: ", recipe_num/ len(recipe_puppy_pandas["recipe_name"]))
+
     ingredient_list = row["recipe_ingredients"]
     recipe_molecule_list = []   
     #iterate through each ingredient of the recipe
