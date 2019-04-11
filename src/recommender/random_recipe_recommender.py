@@ -14,11 +14,12 @@ import operator
 
 
 
+
 def random_recipe_recommender(recipe_graph):
     result = {}
     list_of_nodes = recipe_graph.nodes()
     
-    all_recipe_comb = list(combinations(list_of_nodes, 2))
+    all_recipe_comb = list(combinations(list_of_nodes, 3))
     for recipe in all_recipe_comb:
         key = tuple(recipe)
         result[key] = 0
@@ -41,44 +42,6 @@ def random_recipe_recommender(recipe_graph):
 
     return result
 
-    # #Where the nodes of the random walk will be placed into
-    # random_nodes = []
-
-    # #random walk for inputted iterations
-    # for num in range(iterations):
-    
-    #     #current node always restarts to the original ingredient
-    #     current_node = ingredient
-
-    #     #walk a inputted number of steps
-    #     for num in range(steps):
-            
-    #         #return back to the original node at a inputted probability 
-    #         if G.nodes[current_node]["molecule_node"] == True:
-                
-    #             #states if something should return of not given the probability 
-    #             return_bool = np.random.choice(np.array([0,1]), p=[1 - return_prob, return_prob])
-                
-    #             #returns back to the original node
-    #             if return_bool == 1:
-    #                 current_node = ingredient  
-
-    #             #continues exploring other nodes    
-    #             elif return_bool == 0:
-    #                 number_of_edges = len(G[current_node])
-    #                 random_number = random.randint(0, number_of_edges - 1)
-    #                 current_node = list(G[current_node])[random_number]           
-            
-    #         #does not return to the original node if the current node is also an ingredient
-    #         else:
-    #             number_of_edges = len(G[current_node])
-    #             random_number = random.randint(0, number_of_edges - 1)
-    #             current_node = list(G[current_node])[random_number]
-        
-    #     #adds to the list once done
-    #     random_nodes.append(current_node)
-
-    # return Counter(random_nodes)
 
 
 if __name__ == "__main__":
@@ -91,4 +54,9 @@ if __name__ == "__main__":
 
     #Converting a dictionary of dictionaries to a graph
     G = pickled_G
+    
+    stop_ingredients = ['salt', 'butter', 'sugar', 'black pepper', 'garlic', 'olive oil', 'flour', 'water', 'onions', 'eggs', 'vegetable oil', 'lemon juice', 'milk', 'heavy cream', 'baking powder', 'baking soda', 'bread crumbs', 'cream', 'egg yolks', 'sea salt', 'bread', 'nonstick cooking spray', 'sauce']
+    for stop_ing in stop_ingredients:
+        G.remove_node(stop_ing)
+    
     print(random_recipe_recommender(G))
