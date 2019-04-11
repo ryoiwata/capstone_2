@@ -18,8 +18,9 @@ import operator
 def random_recipe_recommender(recipe_graph):
     result = {}
     list_of_nodes = recipe_graph.nodes()
-    
-    all_recipe_comb = list(combinations(list_of_nodes, 3))
+    num_ing_per_recipe = int(input("How many ingredients in your recipe: "))
+
+    all_recipe_comb = list(combinations(list_of_nodes, num_ing_per_recipe))
     for recipe in all_recipe_comb:
         key = tuple(recipe)
         result[key] = 0
