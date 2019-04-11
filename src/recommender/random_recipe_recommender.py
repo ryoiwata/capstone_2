@@ -11,7 +11,7 @@ from collections import Counter
 import numpy as np
 from itertools import combinations 
 import operator
-
+import heapq
 
 
 
@@ -39,7 +39,7 @@ def random_recipe_recommender(recipe_graph):
         # for ingredient_1 in key:
         #     print(recipe_graph[ingredient_1])
         #     break
-    result = sorted(result.items(), key=operator.itemgetter(1))
+    result = {k: v for k, v in result.items() if v > 10000 }
 
     return result
 
