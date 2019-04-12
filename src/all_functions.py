@@ -74,7 +74,6 @@ def graph_based_on_shared_recipe_creator(pandas_df = recipe_puppy_pandas):
                 G[ingredient_1][ingredient_2]["weight"] += 1
     
     return G
-##################################
 
 def graph_based_on_ingredient_with_associated_flavor_molecule_creator(pandas_df = ingredient_only_pd):
     #Initializing Graph
