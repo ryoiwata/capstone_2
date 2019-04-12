@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 import random
 from collections import Counter
+from itertools import combinations
 
 #PandaDF of ingredients and their associated flavor molecules
 #Opening the pickled file
@@ -18,9 +19,62 @@ pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
 #Getting the PandaDF from the pickle
 ingredient_only_pd = pickle.load(pickle_in)
 
+#PandaDF of ingredients and their associated flavor molecules
+#Opening the pickled file
+pickle_in = open("./data/pandas/recipe_puppy_pandas.pickle", "rb")
+#Getting the PandaDF from the pickle
+recipe_puppy_pandas = pickle.load(pickle_in)
+"""
+#accessing mongoDB for flavor molecules
+client = MongoClient()
+database = client['food_map']   # Database name (to connect to)
+collections_molecule = database['flavor_molecules']
+collections_recipe = database['recipes']
+#Getting the dataset from MongoDB into Pandas for recipes
+recipe_puppy_pandas = pd.DataFrame(list(collections_recipe.find()))
+recipe_puppy_pandas = recipe_puppy_pandas.drop_duplicates(subset= "recipe_name", keep="last")
+"""
+
+
+
+
 """
 GRAPH CREATION
 """
+
+def graph_based_on_shared_recipe_creator(pandas_df = recipe_puppy_pandas):
+    #dropping duplicates before using pandas_df as a graph
+    pandas_df = pandas_df.drop_duplicates(subset= "recipe_name", keep="last")
+    
+    #Initializing the Graph
+    G=nx.Graph()
+
+    #iterate through each recipe
+    for index, row in pandas_df.iterrows():
+        ingredient_list = row["recipe_ingredients"]
+        
+        #generator of all the pairs of ingredients within a recipe
+        for combo in combinations(ingredient_list, 2):
+            #individual ingredient from the combonitation
+            ingredient_1 = combo[0]
+            ingredient_2 = combo[1]
+            
+            #making a node for each ingredient and seeting the node attribute
+            G.add_node(ingredient_1)
+            G.node[ingredient_1]["ingredient_node"] = True
+            G.node[ingredient_1]["molecule_node"] = False
+            G.add_node(ingredient_2)
+            G.node[ingredient_2]["ingredient_node"] = True
+            G.node[ingredient_2]["molecule_node"] = False
+
+            #Adding edges if an ingredient is within the same recipe
+            if G.get_edge_data(ingredient_1, ingredient_2) == None:
+                G.add_edge(ingredient_1, ingredient_2, weight = 1)
+            else:
+                G[ingredient_1][ingredient_2]["weight"] += 1
+    
+    return G
+##################################
 
 def graph_based_on_ingredient_with_associated_flavor_molecule_creator(pandas_df = ingredient_only_pd):
     #Initializing Graph
@@ -63,30 +117,40 @@ def graph_based_on_shared_molecule_creator(pandas_df = ingredient_only_pd, min_i
         ingredient_1 = row1["ingredient"]
         #ingredient category
         category_1 = row1["category"]
+        #ingredient molecules
         molecules_1 = row1["set_molecules"]
 
+        #creating an ingredient node and adding attributes
         G.add_node(ingredient_1)
         G.node[ingredient_1]["ingredient_node"] = True
         G.node[ingredient_1]["molecule_node"] = False
         G.node[ingredient_1]["category"] = category_1
 
         for index, row2 in pandas_df.iterrows():
+            #ingredient name
             ingredient_2 = row2["ingredient"]
             
             #checks to see if ingredients are different
             if ingredient_1 != ingredient_2:
+                #ingredient category
                 category_2 = row2["category"]
+                #ingredient molecules
                 molecules_2 = row2["set_molecules"]
                 
+                #creating an ingredient node and adding attributes
                 G.add_node(ingredient_2)
                 G.node[ingredient_2]["ingredient_node"] = True
                 G.node[ingredient_2]["molecule_node"] = False
                 G.node[ingredient_2]["category"] = category_2
                 
+                #quantifying the number of molecules in each ingredient, 
+                #and finding the intersection of the two
                 num_intersection = len(molecules_1.intersection(molecules_2))
                 total_molecules = len(molecules_1.union(molecules_2))
                 intersection_ratio = num_intersection / total_molecules
 
+                #creating an edge if the two ingredients
+                #have at least a minimum ratio of intersection 
                 if intersection_ratio > min_intersection_ratio:
                     G.add_edge(ingredient_1, ingredient_2, weight=num_intersection)
     return G
