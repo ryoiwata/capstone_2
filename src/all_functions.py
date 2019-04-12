@@ -17,78 +17,7 @@ from collections import Counter
 pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
 #Getting the PandaDF from the pickle
 ingredient_only_pd = pickle.load(pickle_in)
-
-
-
-#maybe delete this function
-def molecule_recipe_walker(ingredient, iterations = 10000, steps = 10, return_prob = 0.001):
-    #Opening the pickled file
-    pickle_in = open("./data/graph/recipe_molecule_flavordb_puppy_graph.pickle","rb")
-    #Getting the graph from the pickle
-    recipe_molecule_graph = pickle.load(pickle_in)
-
-    #PandaDF of ingredients and their associated flavor molecules (with ingredients that are not cooked and have recipes)
-    #Opening the pickled file
-    pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
-    #Getting the dictionary from the pickle
-    ingredient_only_pd = pickle.load(pickle_in)
-
-
-    #iterate through each row of flavorDB based on if index is in random sample
-    for index, row in ingredient_only_pd.iterrows():
-        #name of the ingredient from the "rows" 
-        ingredient_1 = row["ingredient"]
-        #set of the ingredient from the "rows"
-        set_of_molecules= row["set_molecules"]
-        #category of the ingredient from the "rows"
-        category = row["category"]
-
-        # to keep track of what's going on
-        for molecule in set_of_molecules:
-            #creating an ingredient node and adding attributes
-            recipe_molecule_graph.add_node(ingredient_1)
-            recipe_molecule_graph.node[ingredient_1]["ingredient_node"] = True
-            recipe_molecule_graph.node[ingredient_1]["molecule_node"] = False
-            recipe_molecule_graph.node[ingredient_1]["category"] = category
-            
-            #creating a molecule node and adding attribute
-            recipe_molecule_graph.add_node(molecule)
-            recipe_molecule_graph.node[molecule]["molecule_node"] = True
-            recipe_molecule_graph.node[molecule]["ingredient_node"] = False
-            recipe_molecule_graph.add_edge(ingredient_1, molecule)
-
-
-
-    #Where the nodes of the random walk will be placed into
-    random_nodes = []
-
-    #random walk for inputted iterations
-    for num in range(iterations):
     
-        #current node always restarts to the original ingredient
-        current_node = ingredient
-        number_of_edges = len(recipe_molecule_graph[current_node])
-        random_number = random.randint(0, number_of_edges - 1)
-        current_node = list(recipe_molecule_graph[current_node])[random_number] 
-        
-        edge_list = recipe_molecule_graph.edges(current_node, data = True)
-        for edge in edge_list:
-            print(edge)
-
-
-        break
-        while recipe_molecule_graph.nodes[current_node]["molecule_node"] == True:
-            number_of_edges = len(recipe_molecule_graph[current_node])
-            random_number = random.randint(0, number_of_edges - 1)
-            current_node = list(recipe_molecule_graph[current_node])[random_number] 
-
-        #adds to the list once done
-        random_nodes.append(current_node)
-
-    # return Counter(random_nodes)
-        
-        
-
 
 def graph_based_on_shared_molecule_creator(pandas_df, file_name = './data/graph/ingredient_full_graph.pickle', create_file = False):
     #Initializing Graph
@@ -181,8 +110,4 @@ def common_pair_analysis(ing1, ing2, graph_it = False, print_statements = False)
     return ratio_shared_to_total, num_unique_molecules_1, num_unique_molecules_2, num_shared_molecules
 
 if __name__ == "__main__":
-    ingredient_1 = "jalapeno"
-    iterations = 10000
-    steps = 10
-    return_prob = 0.001
-    print(molecule_recipe_walker(ingredient_1, iterations, steps, return_prob))
+    pass
