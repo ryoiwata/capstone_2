@@ -17,9 +17,43 @@ from collections import Counter
 pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
 #Getting the PandaDF from the pickle
 ingredient_only_pd = pickle.load(pickle_in)
-    
 
-def graph_based_on_shared_molecule_creator(pandas_df, file_name = './data/graph/ingredient_full_graph.pickle', create_file = False):
+"""
+GRAPH CREATION
+"""
+
+def graph_based_on_ingredient_with_associated_flavor_molecule_creator(pandas_df = ingredient_only_pd):
+    #Initializing Graph
+    G=nx.Graph()
+
+    #iterate through each row of flavorDB based on if index is in random sample
+    for index, row in pandas_df.iterrows():
+
+        #name of the ingredient from the "rows" 
+        ingredient_1 = row["ingredient"]
+        #category of the ingredient from the "rows"
+        category = row["category"]
+        #set of the ingredient from the "rows"
+        set_of_molecules= row["set_molecules"]
+
+        #creating an ingredient node and adding attributes
+        G.add_node(ingredient_1)
+        G.node[ingredient_1]["ingredient_node"] = True
+        G.node[ingredient_1]["molecule_node"] = False
+        G.node[ingredient_1]["category"] = category
+
+        # to keep track of what's going on
+        for molecule in set_of_molecules:           
+            #creating a molecule node and adding attribute
+            G.add_node(molecule)
+            G.node[molecule]["molecule_node"] = True
+            G.node[molecule]["ingredient_node"] = False
+            G.add_edge(ingredient_1, molecule)
+    return G
+
+
+
+def graph_based_on_shared_molecule_creator(pandas_df = ingredient_only_pd, intersection_ratio = 0.25):
     #Initializing Graph
     G=nx.Graph()
 
@@ -36,7 +70,7 @@ def graph_based_on_shared_molecule_creator(pandas_df, file_name = './data/graph/
         G.node[ingredient_1]["molecule_node"] = False
         G.node[ingredient_1]["category"] = category_1
 
-        for index, row2 in ingredient_only_pd.iterrows():
+        for index, row2 in pandas_df.iterrows():
             ingredient_2 = row2["ingredient"]
             
             #checks to see if ingredients are different
@@ -52,20 +86,19 @@ def graph_based_on_shared_molecule_creator(pandas_df, file_name = './data/graph/
                 num_intersection = len(molecules_1.intersection(molecules_2))
                 total_molecules = len(molecules_1.union(molecules_2))
                 intersection_ratio = num_intersection / total_molecules
-                if intersection_ratio > 0.25:
+                if intersection_ratio > intersection_ratio:
                     G.add_edge(ingredient_1, ingredient_2, weight=num_intersection)
-    if create_file == True:
-        with open(file_name, 'wb') as file:
-            file.write(pickle.dumps(G))
-            file.close()
     return G
 
+"""
+ANALYSIS
+"""
 
-def common_pair_analysis(ing1, ing2, graph_it = False, print_statements = False):
+def common_pair_analysis(ing1, ing2, pandas_df = ingredient_only_pd, graph_it = False, print_statements = False):
     demo_G=nx.Graph()
     mol_list = []
     #iterate through each row of flavorDB based on if index is in random sample
-    for index, row in ingredient_only_pd.iterrows():
+    for index, row in pandas_df.iterrows():
         #set of the ingredient from the "rows"
         set_mol= row["set_molecules"]
         #name of the ingredient from the "rows" 
