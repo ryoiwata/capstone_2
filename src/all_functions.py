@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 import random
 from collections import Counter
+from itertools import combinations
 
 #PandaDF of ingredients and their associated flavor molecules
 #Opening the pickled file
@@ -18,79 +19,94 @@ pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
 #Getting the PandaDF from the pickle
 ingredient_only_pd = pickle.load(pickle_in)
 
+#PandaDF of ingredients and their associated flavor molecules
+#Opening the pickled file
+pickle_in = open("./data/pandas/recipe_puppy_pandas.pickle", "rb")
+#Getting the PandaDF from the pickle
+recipe_puppy_pandas = pickle.load(pickle_in)
+"""
+#accessing mongoDB for flavor molecules
+client = MongoClient()
+database = client['food_map']   # Database name (to connect to)
+collections_molecule = database['flavor_molecules']
+collections_recipe = database['recipes']
+#Getting the dataset from MongoDB into Pandas for recipes
+recipe_puppy_pandas = pd.DataFrame(list(collections_recipe.find()))
+recipe_puppy_pandas = recipe_puppy_pandas.drop_duplicates(subset= "recipe_name", keep="last")
+"""
 
 
-#maybe delete this function
-def molecule_recipe_walker(ingredient, iterations = 10000, steps = 10, return_prob = 0.001):
-    #Opening the pickled file
-    pickle_in = open("./data/graph/recipe_molecule_flavordb_puppy_graph.pickle","rb")
-    #Getting the graph from the pickle
-    recipe_molecule_graph = pickle.load(pickle_in)
 
-    #PandaDF of ingredients and their associated flavor molecules (with ingredients that are not cooked and have recipes)
-    #Opening the pickled file
-    pickle_in = open("./data/ingredients/ingredient_only_pd.pickle", "rb")
-    #Getting the dictionary from the pickle
-    ingredient_only_pd = pickle.load(pickle_in)
 
+"""
+GRAPH CREATION
+"""
+
+def graph_based_on_shared_recipe_creator(pandas_df = recipe_puppy_pandas):
+    #dropping duplicates before using pandas_df as a graph
+    pandas_df = pandas_df.drop_duplicates(subset= "recipe_name", keep="last")
+    
+    #Initializing the Graph
+    G=nx.Graph()
+
+    #iterate through each recipe
+    for index, row in pandas_df.iterrows():
+        ingredient_list = row["recipe_ingredients"]
+        
+        #generator of all the pairs of ingredients within a recipe
+        for combo in combinations(ingredient_list, 2):
+            #individual ingredient from the combonitation
+            ingredient_1 = combo[0]
+            ingredient_2 = combo[1]
+            
+            #making a node for each ingredient and seeting the node attribute
+            G.add_node(ingredient_1)
+            G.node[ingredient_1]["ingredient_node"] = True
+            G.node[ingredient_1]["molecule_node"] = False
+            G.add_node(ingredient_2)
+            G.node[ingredient_2]["ingredient_node"] = True
+            G.node[ingredient_2]["molecule_node"] = False
+
+            #Adding edges if an ingredient is within the same recipe
+            if G.get_edge_data(ingredient_1, ingredient_2) == None:
+                G.add_edge(ingredient_1, ingredient_2, weight = 1)
+            else:
+                G[ingredient_1][ingredient_2]["weight"] += 1
+    
+    return G
+
+def graph_based_on_ingredient_with_associated_flavor_molecule_creator(pandas_df = ingredient_only_pd):
+    #Initializing Graph
+    G=nx.Graph()
 
     #iterate through each row of flavorDB based on if index is in random sample
-    for index, row in ingredient_only_pd.iterrows():
+    for index, row in pandas_df.iterrows():
+
         #name of the ingredient from the "rows" 
         ingredient_1 = row["ingredient"]
-        #set of the ingredient from the "rows"
-        set_of_molecules= row["set_molecules"]
         #category of the ingredient from the "rows"
         category = row["category"]
+        #set of the ingredient from the "rows"
+        set_of_molecules= row["set_molecules"]
+
+        #creating an ingredient node and adding attributes
+        G.add_node(ingredient_1)
+        G.node[ingredient_1]["ingredient_node"] = True
+        G.node[ingredient_1]["molecule_node"] = False
+        G.node[ingredient_1]["category"] = category
 
         # to keep track of what's going on
-        for molecule in set_of_molecules:
-            #creating an ingredient node and adding attributes
-            recipe_molecule_graph.add_node(ingredient_1)
-            recipe_molecule_graph.node[ingredient_1]["ingredient_node"] = True
-            recipe_molecule_graph.node[ingredient_1]["molecule_node"] = False
-            recipe_molecule_graph.node[ingredient_1]["category"] = category
-            
+        for molecule in set_of_molecules:           
             #creating a molecule node and adding attribute
-            recipe_molecule_graph.add_node(molecule)
-            recipe_molecule_graph.node[molecule]["molecule_node"] = True
-            recipe_molecule_graph.node[molecule]["ingredient_node"] = False
-            recipe_molecule_graph.add_edge(ingredient_1, molecule)
+            G.add_node(molecule)
+            G.node[molecule]["molecule_node"] = True
+            G.node[molecule]["ingredient_node"] = False
+            G.add_edge(ingredient_1, molecule)
+    return G
 
 
 
-    #Where the nodes of the random walk will be placed into
-    random_nodes = []
-
-    #random walk for inputted iterations
-    for num in range(iterations):
-    
-        #current node always restarts to the original ingredient
-        current_node = ingredient
-        number_of_edges = len(recipe_molecule_graph[current_node])
-        random_number = random.randint(0, number_of_edges - 1)
-        current_node = list(recipe_molecule_graph[current_node])[random_number] 
-        
-        edge_list = recipe_molecule_graph.edges(current_node, data = True)
-        for edge in edge_list:
-            print(edge)
-
-
-        break
-        while recipe_molecule_graph.nodes[current_node]["molecule_node"] == True:
-            number_of_edges = len(recipe_molecule_graph[current_node])
-            random_number = random.randint(0, number_of_edges - 1)
-            current_node = list(recipe_molecule_graph[current_node])[random_number] 
-
-        #adds to the list once done
-        random_nodes.append(current_node)
-
-    # return Counter(random_nodes)
-        
-        
-
-
-def graph_based_on_shared_molecule_creator(pandas_df, file_name = './data/graph/ingredient_full_graph.pickle', create_file = False):
+def graph_based_on_shared_molecule_creator(pandas_df = ingredient_only_pd, min_intersection_ratio = 0.5):
     #Initializing Graph
     G=nx.Graph()
 
@@ -100,43 +116,53 @@ def graph_based_on_shared_molecule_creator(pandas_df, file_name = './data/graph/
         ingredient_1 = row1["ingredient"]
         #ingredient category
         category_1 = row1["category"]
+        #ingredient molecules
         molecules_1 = row1["set_molecules"]
 
+        #creating an ingredient node and adding attributes
         G.add_node(ingredient_1)
         G.node[ingredient_1]["ingredient_node"] = True
         G.node[ingredient_1]["molecule_node"] = False
         G.node[ingredient_1]["category"] = category_1
 
-        for index, row2 in ingredient_only_pd.iterrows():
+        for index, row2 in pandas_df.iterrows():
+            #ingredient name
             ingredient_2 = row2["ingredient"]
             
             #checks to see if ingredients are different
             if ingredient_1 != ingredient_2:
-                G.add_node(ingredient_1)
+                #ingredient category
                 category_2 = row2["category"]
+                #ingredient molecules
                 molecules_2 = row2["set_molecules"]
-
-                G.node[ingredient_1]["ingredient_node"] = True
-                G.node[ingredient_1]["molecule_node"] = False
-                G.node[ingredient_1]["category"] = category_2
                 
+                #creating an ingredient node and adding attributes
+                G.add_node(ingredient_2)
+                G.node[ingredient_2]["ingredient_node"] = True
+                G.node[ingredient_2]["molecule_node"] = False
+                G.node[ingredient_2]["category"] = category_2
+                
+                #quantifying the number of molecules in each ingredient, 
+                #and finding the intersection of the two
                 num_intersection = len(molecules_1.intersection(molecules_2))
                 total_molecules = len(molecules_1.union(molecules_2))
                 intersection_ratio = num_intersection / total_molecules
-                if intersection_ratio > 0.25:
+
+                #creating an edge if the two ingredients
+                #have at least a minimum ratio of intersection 
+                if intersection_ratio > min_intersection_ratio:
                     G.add_edge(ingredient_1, ingredient_2, weight=num_intersection)
-    if create_file == True:
-        with open(file_name, 'wb') as file:
-            file.write(pickle.dumps(G))
-            file.close()
     return G
 
+"""
+ANALYSIS
+"""
 
-def common_pair_analysis(ing1, ing2, graph_it = False, print_statements = False):
+def common_pair_analysis(ing1, ing2, pandas_df = ingredient_only_pd, graph_it = False, print_statements = False):
     demo_G=nx.Graph()
     mol_list = []
     #iterate through each row of flavorDB based on if index is in random sample
-    for index, row in ingredient_only_pd.iterrows():
+    for index, row in pandas_df.iterrows():
         #set of the ingredient from the "rows"
         set_mol= row["set_molecules"]
         #name of the ingredient from the "rows" 
@@ -181,8 +207,4 @@ def common_pair_analysis(ing1, ing2, graph_it = False, print_statements = False)
     return ratio_shared_to_total, num_unique_molecules_1, num_unique_molecules_2, num_shared_molecules
 
 if __name__ == "__main__":
-    ingredient_1 = "jalapeno"
-    iterations = 10000
-    steps = 10
-    return_prob = 0.001
-    print(molecule_recipe_walker(ingredient_1, iterations, steps, return_prob))
+    pass
