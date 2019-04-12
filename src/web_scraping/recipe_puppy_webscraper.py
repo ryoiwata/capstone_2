@@ -1,4 +1,3 @@
-
 #for webscraping
 import requests
 from bs4 import BeautifulSoup
@@ -17,7 +16,7 @@ import pickle
 # Create instance of the MongoClient class
 client = MongoClient()
 database = client['food_map']   # Database name (to connect to)
-collections = database['recipes'] # Collection name (to use)
+collections = database['recipe_puppy'] # Collection name (to use)
 
 #Opening the pickled file that has the list of all ingredients from FlavorDB
 #This file needs to be run in the root directory, food map 
@@ -25,6 +24,9 @@ pickle_in = open("./data/ingredients/ingredient_full_list.pickle","rb")
 
 #Getting the dictionary from the pickle
 pickled_list = pickle.load(pickle_in)
+
+missing_ingredients = []
+error_ingredients = []
 
 x = 0
 #looping through each ingredient from the list
@@ -39,13 +41,13 @@ for ingredient in pickled_list:
         x += 1
         print("current ingredient number: ", x)
         print("current ingredient: ", ingredient_name)
-        
 
         url = "http://www.recipepuppy.com/?i={}&q={}".format(ing_for_url, ing_for_url)
         recipe_puppy_page = requests.get(url)
         soup = BeautifulSoup(recipe_puppy_page.text, 'html.parser')
     except:
         print("error")
+        error_ingredients.append(ingredient)
         continue
 
     try:
@@ -56,6 +58,7 @@ for ingredient in pickled_list:
         #If the text contains "sorry, then we'll move on to the next ingredient"
         if query_result[0].strip() == "Sorry":
             print("No results here")
+            missing_ingredients.append(ingredient)
             continue
     except: #if query exists we'll loop through each page of the ingredients
         try:
@@ -117,3 +120,11 @@ for ingredient in pickled_list:
             continue
                  
 print("all done!")
+
+with open('missing_ingredients.list', 'wb') as file:
+    file.write(pickle.dumps(missing_ingredients))
+    file.close()
+
+with open('error_ingredients.list', 'wb') as file:
+    file.write(pickle.dumps(error_ingredients))
+    file.close()
