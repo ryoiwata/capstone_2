@@ -53,7 +53,7 @@ def graph_based_on_ingredient_with_associated_flavor_molecule_creator(pandas_df 
 
 
 
-def graph_based_on_shared_molecule_creator(pandas_df = ingredient_only_pd, intersection_ratio = 0.25):
+def graph_based_on_shared_molecule_creator(pandas_df = ingredient_only_pd, min_intersection_ratio = 0.5):
     #Initializing Graph
     G=nx.Graph()
 
@@ -75,18 +75,19 @@ def graph_based_on_shared_molecule_creator(pandas_df = ingredient_only_pd, inter
             
             #checks to see if ingredients are different
             if ingredient_1 != ingredient_2:
-                G.add_node(ingredient_1)
                 category_2 = row2["category"]
                 molecules_2 = row2["set_molecules"]
-
-                G.node[ingredient_1]["ingredient_node"] = True
-                G.node[ingredient_1]["molecule_node"] = False
-                G.node[ingredient_1]["category"] = category_2
+                
+                G.add_node(ingredient_2)
+                G.node[ingredient_2]["ingredient_node"] = True
+                G.node[ingredient_2]["molecule_node"] = False
+                G.node[ingredient_2]["category"] = category_2
                 
                 num_intersection = len(molecules_1.intersection(molecules_2))
                 total_molecules = len(molecules_1.union(molecules_2))
                 intersection_ratio = num_intersection / total_molecules
-                if intersection_ratio > intersection_ratio:
+
+                if intersection_ratio > min_intersection_ratio:
                     G.add_edge(ingredient_1, ingredient_2, weight=num_intersection)
     return G
 
