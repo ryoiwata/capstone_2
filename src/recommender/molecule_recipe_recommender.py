@@ -23,15 +23,16 @@ pickle_in = open("./data/graph/recipe_molecule_flavordb_puppy_graph.pickle","rb"
 #Getting the graph from the pickle
 recipe_molecule_graph = pickle.load(pickle_in)
 
-def recipe_molecule_recommender(ingredient_1):
+def recipe_molecule_recommender(ingredient_1, ratio):
     scores = {}
     molecule_list_1 = ingredient_only_pd[ingredient_only_pd["ingredient"] == ingredient_1].molecules.item()
     
     #iterate through each new ingredient
     for ingredient_2 in ingredient_only_pd["ingredient"]:
-        
+        if ingredient_1 == ingredient_2:
+            continue
         score = 0
-        print("ingredient: ", ingredient_2)
+        # print("ingredient: ", ingredient_2)
         molecule_list_2 = ingredient_only_pd[ingredient_only_pd["ingredient"] == ingredient_2].molecules.item()
         for molecule_1 in molecule_list_1: 
             for molecule_2 in molecule_list_2:
@@ -39,14 +40,15 @@ def recipe_molecule_recommender(ingredient_1):
                     score += recipe_molecule_graph[molecule_1][molecule_2]['weight']
                 except:
                     pass
-        score /= len(molecule_list_2) ** 0.5
+        score /= len(molecule_list_2) ** ratio
         scores[ingredient_2] = score
-        print(scores[ingredient_2])
+        # print(scores[ingredient_2])
     sorted_scores = sorted(scores.items(), key=operator.itemgetter(1),  reverse=True)
-    print(sorted_scores)
+    return(sorted_scores[:10])
         
     
 
 if __name__ == "__main__":
-    ingredient_1 = "parsley"
-    print(recipe_molecule_recommender(ingredient_1))
+    ingredient_1 = "jalapeno"
+    ratio = 0.3
+    print(recipe_molecule_recommender(ingredient_1, ratio))
