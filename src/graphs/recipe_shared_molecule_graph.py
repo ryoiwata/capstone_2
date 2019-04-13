@@ -12,8 +12,7 @@ import networkx as nx
 
 #Opening the pickled file
 #Needs to be opened in the recommender folder
-pickle_in = open("./data/pandas/recipe_puppy_pandas.pickle","rb")
-
+pickle_in = open("./data/pandas/cleaned_up_recipes_pandas.pickle","rb")
 #Getting the dictionary from the pickle
 recipe_puppy_pandas = pickle.load(pickle_in)
 
@@ -27,24 +26,6 @@ pickle_in = open("./data/pandas/flavorDB_pandas.pickle","rb")
 flavorDB_pandas = pickle.load(pickle_in)
 #makes the ingredient database lowercase
 flavorDB_pandas["ingredient"] = flavorDB_pandas["ingredient"].str.lower()
-
-###Set of ingredients that have recipes 
-
-#Opening the pickled file
-pickle_in = open("./data/ingredients/ingredient_full_list.pickle","rb")
-
-#Getting the dictionary from the pickle
-pickled_list = pickle.load(pickle_in)
-
-#Making each ingredient name lowercase
-lowered_pickle = [x.lower() for x in pickled_list]
-
-stop_ingredients = ['salt', 'butter', 'sugar', 'pepper', 'garlic', 'flour', 'water', 'onion', 'egg', 'milk']
-lowered_pickle = [x for x in lowered_pickle if x not in stop_ingredients]
-
-
-#Making the list into a set for comparison
-ingredient_set = set(lowered_pickle)
 
 ###Making a graph that will iterate through each recipe
 ###Then iterate through each ingredient
@@ -69,10 +50,9 @@ for index, row in recipe_puppy_pandas.iterrows():
     ingredient_list = row["recipe_ingredients"]
     recipe_molecule_list = []   
     #iterate through each ingredient of the recipe
-    for ingredient_1 in ingredient_list:
-        if ingredient_1 in ingredient_set:
-            molecules = flavorDB_pandas.loc[flavorDB_pandas['ingredient'] == ingredient_1, 'molecules'].iloc[0] 
-            recipe_molecule_list += molecules
+    for ingredient_1 in ingredient_list:        
+        molecules = flavorDB_pandas.loc[flavorDB_pandas['ingredient'] == ingredient_1, 'molecules'].iloc[0] 
+        recipe_molecule_list += molecules
     
     molecule_counter = Counter(recipe_molecule_list)
     for molecule_1 in molecule_counter:
