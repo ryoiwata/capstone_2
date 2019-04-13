@@ -119,7 +119,14 @@ def find_communities_modularities(G, max_iter=None):
     modularities = []
     partitions = []
     i = 0
-    while G1.number_of_edges() > 0:
+    my_bool = True
+    while nx.number_connected_components(G) < 20:
+        if nx.number_connected_components(G) == 16 and my_bool:
+            with open('./data/graph/community_girvan_newman.graph', 'wb') as file:
+                file.write(pickle.dumps(G))
+                file.close()
+            my_bool = False
+      
         i += 1
         print("Iteration: ", i)
         subgraphs = nx.connected_component_subgraphs(G1)
