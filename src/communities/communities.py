@@ -1,6 +1,8 @@
 import networkx as nx
 from collections import Counter
-
+import _pickle as pickle
+import numpy as np
+import matplotlib.pyplot as plt
 
 def girvan_newman_step(G):
     """Run one step of the Girvan-Newman community detection algorithm.
@@ -130,6 +132,22 @@ def find_communities_modularities(G, max_iter=None):
     return partitions, modularities
 
 if __name__ == '__main__':
-    karateG = nx.karate_club_graph()
-    c = find_communities_modularity(karateG)
-    print("Optimal number of communities: {}".format(len(c)))
+    
+    
+    #Opening the pickled file
+    pickle_in = open("./data/graph/ingredients_with_most_shared_molecules.graph", "rb")
+    #Getting the dictionary from the pickle
+    shared_molecule_graph = pickle.load(pickle_in)
+
+
+    comms, mods = find_communities_modularities(shared_molecule_graph)
+    plt.plot(list(range(1,len(mods)+1)), mods, ':o')
+    plt.xlabel('number of communities')
+    plt.ylabel('modularity')
+    print("Optimal number of communities: {}".format(len(comms[np.argmax(mods)])))
+    plt.savefig('girvan_newman_shared_molecule_ratio_graph.png')
+
+#   # Uncomment this once done
+    # karateG = nx.karate_club_graph()
+    # c = find_communities_modularity(karateG)
+    # print("Optimal number of communities: {}".format(len(c)))
