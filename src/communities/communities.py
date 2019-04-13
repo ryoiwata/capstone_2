@@ -154,6 +154,13 @@ if __name__ == '__main__':
     print("Optimal number of communities: {}".format(len(comms[np.argmax(mods)])))
     plt.savefig('girvan_newman_shared_molecule_ratio_graph.png')
 
+    with open('./data/partitions', 'wb') as file:
+        file.write(pickle.dumps(comms))
+        file.close()
+
+    with open('./data/modularities', 'wb') as file:
+        file.write(pickle.dumps(mods))
+        file.close()
 #   # Uncomment this once done
     # karateG = nx.karate_club_graph()
     # c = find_communities_modularity(karateG)
