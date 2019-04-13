@@ -7,6 +7,7 @@ import pandas as pd
 from collections import Counter
 #for graph creation
 import networkx as nx
+from itertools import combinations, product
 
 ###Pandas Dataframe of Recipes with associated ingredients from Recipe Puppy API
 
@@ -50,21 +51,27 @@ for index, row in recipe_puppy_pandas.iterrows():
     ingredient_set = set(row["recipe_ingredients"])
     if len(ingredient_set) <= 1:
         continue 
-    recipe_molecule_list = []   
-    #iterate through each ingredient of the recipe
-    for ingredient_1 in ingredient_set:        
-        molecules = flavorDB_pandas.loc[flavorDB_pandas['ingredient'] == ingredient_1, 'molecules'].iloc[0] 
-        recipe_molecule_list += molecules
     
-    molecule_counter = Counter(recipe_molecule_list)
-    for molecule_1 in molecule_counter:
-        G.add_node(molecule_1)
-        for molecule_2 in molecule_counter:
+    ingredient_combo = combinations(ingredient_set, 2)
+    for ing_combo in ingredient_combo:
+        molecules_1 = flavorDB_pandas.loc[flavorDB_pandas['ingredient'] == ing_combo[0], 'molecules'].iloc[0] 
+        molecules_2 = flavorDB_pandas.loc[flavorDB_pandas['ingredient'] == ing_combo[1], 'molecules'].iloc[0] 
+
+        for mol_combo in product(molecules_1, molecules_2):
+            molecule_1 = mol_combo[0]
+            molecule_2 = mol_combo[1]
+            G.add_node(molecule_1)
             G.add_node(molecule_2)
+            G.node[molecule_1]["ingredient_node"] = False
+            G.node[molecule_1]["molecule_node"] = True
+            G.node[molecule_2]["ingredient_node"] = False
+            G.node[molecule_2]["molecule_node"] = True
+
             if G.get_edge_data(molecule_1, molecule_2) == None:
-                G.add_edge(molecule_1, molecule_2, weight = molecule_counter[molecule_2])
+                G.add_edge(molecule_1, molecule_2, weight = 1)
             else:
-                G[molecule_1][molecule_2]["weight"] += molecule_counter[molecule_2]
+                G[molecule_1][molecule_2]["weight"] += 1
+            
 
 
 #writes the pickle into the data file
