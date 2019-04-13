@@ -47,10 +47,12 @@ for index, row in recipe_puppy_pandas.iterrows():
     recipe_num += 1
     print("currently on: ", recipe_num/ len(recipe_puppy_pandas["recipe_name"]))
 
-    ingredient_list = row["recipe_ingredients"]
+    ingredient_set = set(row["recipe_ingredients"])
+    if len(ingredient_set) <= 1:
+        continue 
     recipe_molecule_list = []   
     #iterate through each ingredient of the recipe
-    for ingredient_1 in ingredient_list:        
+    for ingredient_1 in ingredient_set:        
         molecules = flavorDB_pandas.loc[flavorDB_pandas['ingredient'] == ingredient_1, 'molecules'].iloc[0] 
         recipe_molecule_list += molecules
     
