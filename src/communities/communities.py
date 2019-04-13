@@ -120,8 +120,8 @@ def find_communities_modularities(G, max_iter=None):
     partitions = []
     i = 0
     my_bool = True
-    while nx.number_connected_components(G1) < 10:
-        if nx.number_connected_components(G1) == 3 and my_bool:
+    while nx.number_connected_components(G1) < 4:
+        if nx.number_connected_components(G1) == 2 and my_bool:
             with open('./data/graph/community_girvan_newman.graph', 'wb') as file:
                 file.write(pickle.dumps(G1))
                 file.close()
