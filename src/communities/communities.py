@@ -4,6 +4,10 @@ import _pickle as pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
+def most_central_edge(G):
+    centrality = nx.edge_betweenness_centrality(G, weight= "weight")
+    return max(centrality, key=centrality.get)
+
 def girvan_newman_step(G):
     """Run one step of the Girvan-Newman community detection algorithm.
     Afterwards, the graph will have one more connected component.
@@ -18,8 +22,11 @@ def girvan_newman_step(G):
     ncomp = init_ncomp
     x = 0
     while ncomp == init_ncomp:
-        bw = Counter(nx.edge_betweenness_centrality(G))
-        a, b = bw.most_common(1)[0][0]
+        # bw = Counter(nx.edge_betweenness_centrality(G))
+        # a, b = bw.most_common(1)[0][0]
+        edge_to_cut = most_central_edge(G)
+        a = edge_to_cut[0]
+        b = edge_to_cut[1]
         G.remove_edge(a, b)
         ncomp = nx.number_connected_components(G)
         x += 1

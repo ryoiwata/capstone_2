@@ -151,7 +151,7 @@ def graph_based_on_shared_molecule_creator(pandas_df = ingredient_only_pd, min_i
                 #creating an edge if the two ingredients
                 #have at least a minimum ratio of intersection 
                 if intersection_ratio > min_intersection_ratio:
-                    G.add_edge(ingredient_1, ingredient_2, weight=num_intersection)
+                    G.add_edge(ingredient_1, ingredient_2, weight=intersection_ratio)
     return G
 
 """

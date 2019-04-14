@@ -56,7 +56,6 @@ for index, row in recipe_puppy_pandas.iterrows():
     for ing_combo in ingredient_combo:
         molecules_1 = flavorDB_pandas.loc[flavorDB_pandas['ingredient'] == ing_combo[0], 'molecules'].iloc[0] 
         molecules_2 = flavorDB_pandas.loc[flavorDB_pandas['ingredient'] == ing_combo[1], 'molecules'].iloc[0] 
-
         for mol_combo in product(molecules_1, molecules_2):
             molecule_1 = mol_combo[0]
             molecule_2 = mol_combo[1]
@@ -66,7 +65,8 @@ for index, row in recipe_puppy_pandas.iterrows():
             G.node[molecule_1]["molecule_node"] = True
             G.node[molecule_2]["ingredient_node"] = False
             G.node[molecule_2]["molecule_node"] = True
-
+            print(ing_combo)
+            print(mol_combo)
             if G.get_edge_data(molecule_1, molecule_2) == None:
                 G.add_edge(molecule_1, molecule_2, weight = 1)
             else:
