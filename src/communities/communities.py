@@ -3,10 +3,15 @@ from collections import Counter
 import _pickle as pickle
 import numpy as np
 import matplotlib.pyplot as plt
+from operator import itemgetter
 
 def most_central_edge(G):
     centrality = nx.edge_betweenness_centrality(G, weight= "weight")
     return max(centrality, key=centrality.get)
+
+def heaviest(G):
+    u, v, w = max(G.edges(data='weight'), key=itemgetter(2))
+    return (u, v)
 
 def girvan_newman_step(G):
     """Run one step of the Girvan-Newman community detection algorithm.
@@ -24,7 +29,7 @@ def girvan_newman_step(G):
     while ncomp == init_ncomp:
         # bw = Counter(nx.edge_betweenness_centrality(G))
         # a, b = bw.most_common(1)[0][0]
-        edge_to_cut = most_central_edge(G)
+        edge_to_cut = heaviest(G)
         a = edge_to_cut[0]
         b = edge_to_cut[1]
         G.remove_edge(a, b)
