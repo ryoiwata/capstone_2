@@ -24,6 +24,8 @@ ingredient_only_pd = pickle.load(pickle_in)
 pickle_in = open("./data/pandas/recipe_puppy_pandas.pickle", "rb")
 #Getting the PandaDF from the pickle
 recipe_puppy_pandas = pickle.load(pickle_in)
+
+
 """
 #accessing mongoDB for flavor molecules
 client = MongoClient()
@@ -51,21 +53,33 @@ def graph_based_on_shared_recipe_creator(pandas_df = recipe_puppy_pandas):
 
     #iterate through each recipe
     for index, row in pandas_df.iterrows():
-        ingredient_list = row["recipe_ingredients"]
-        
+        ingredient_list = set(row["recipe_ingredients"])
+        if ingredient_list <= 1:
+            continue
+
         #generator of all the pairs of ingredients within a recipe
         for combo in combinations(ingredient_list, 2):
+            
+
             #individual ingredient from the combonitation
             ingredient_1 = combo[0]
             ingredient_2 = combo[1]
-            
+
+            if ingredient_1 == ingredient_2:
+                continue
+            category_1 = ingredient_only_pd.loc[ingredient_only_pd['ingredient'] == ingredient_1, 'category']
+            category_2 = ingredient_only_pd.loc[ingredient_only_pd['ingredient'] == ingredient_2, 'category']
+
             #making a node for each ingredient and seeting the node attribute
             G.add_node(ingredient_1)
             G.node[ingredient_1]["ingredient_node"] = True
             G.node[ingredient_1]["molecule_node"] = False
+            G.node[ingredient_1]["category"] = category_1
             G.add_node(ingredient_2)
             G.node[ingredient_2]["ingredient_node"] = True
             G.node[ingredient_2]["molecule_node"] = False
+            G.node[ingredient_2]["category"] = category_2
+
 
             #Adding edges if an ingredient is within the same recipe
             if G.get_edge_data(ingredient_1, ingredient_2) == None:
@@ -151,7 +165,7 @@ def graph_based_on_shared_molecule_creator(pandas_df = ingredient_only_pd, min_i
                 #creating an edge if the two ingredients
                 #have at least a minimum ratio of intersection 
                 if intersection_ratio > min_intersection_ratio:
-                    G.add_edge(ingredient_1, ingredient_2, weight=num_intersection)
+                    G.add_edge(ingredient_1, ingredient_2, weight=intersection_ratio)
     return G
 
 """
