@@ -6,3 +6,6 @@ data/molecule_data/foodb_2017_06_29_csv
 
 #ignores Jupyter Notebook Check Points
 .ipynb_checkpoints
+
+#ignores all the PyCache files
+*.pyc
