@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import random
 from collections import Counter
 from itertools import combinations
+import math
 
 #PandaDF of ingredients and their associated flavor molecules
 #Opening the pickled file
@@ -47,7 +48,9 @@ GRAPH CREATION
 def graph_based_on_shared_recipe_creator(pandas_df = recipe_puppy_pandas):
     #dropping duplicates before using pandas_df as a graph
     pandas_df = pandas_df.drop_duplicates(subset= "recipe_name", keep="last")
-    
+    number_of_recipes = 0
+            
+
     #Initializing the Graph
     G=nx.Graph()
 
@@ -56,7 +59,8 @@ def graph_based_on_shared_recipe_creator(pandas_df = recipe_puppy_pandas):
         ingredient_list = set(row["recipe_ingredients"])
         if len(ingredient_list) <= 1:
             continue
-        
+        number_of_recipes += 1
+
         for ingredient in ingredient_list:
 
             if ingredient not in G:
@@ -78,15 +82,30 @@ def graph_based_on_shared_recipe_creator(pandas_df = recipe_puppy_pandas):
             ingredient_1 = combo[0]
             ingredient_2 = combo[1]
 
-            if ingredient_1 == ingredient_2:
+            if str(ingredient_1) == str(ingredient_2):
                 continue
 
             #Adding edges if an ingredient is within the same recipe
             if G.get_edge_data(ingredient_1, ingredient_2) == None:
-                G.add_edge(ingredient, ingredient_2, weight = 1)
+                G.add_edge(ingredient_1, ingredient_2, weight = 1)
             else:
                 G[ingredient_1][ingredient_2]["weight"] += 1
     
+    for edge in G.edges():
+        ingredient_1 = edge[0]
+        prob_ing_1 = G.node[ingredient_1]["quantity"] / number_of_recipes
+        # print(ingredient_1, prob_ing_1)
+
+        ingredient_2 = edge[1]
+        prob_ing_2 = G.node[ingredient_2]["quantity"] / number_of_recipes
+        # print(ingredient_2, prob_ing_2)
+
+        original_edge_weight = G[ingredient_1][ingredient_2]["weight"]
+        prob_ing_1_and_ing_2 = original_edge_weight / number_of_recipes
+        # print(ingredient_1, ingredient_2, prob_ing_1_and_ing_2)
+
+        G[ingredient_1][ingredient_2]["weight"] = math.log10( prob_ing_1_and_ing_2 / (prob_ing_1 * prob_ing_2) )
+
     return G
 
 def graph_based_on_ingredient_with_associated_flavor_molecule_creator(pandas_df = ingredient_only_pd):
