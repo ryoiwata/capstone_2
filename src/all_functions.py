@@ -104,7 +104,9 @@ def graph_based_on_shared_recipe_creator(pandas_df = recipe_puppy_pandas):
         prob_ing_1_and_ing_2 = original_edge_weight / number_of_recipes
         # print(ingredient_1, ingredient_2, prob_ing_1_and_ing_2)
 
-        G[ingredient_1][ingredient_2]["weight"] = math.log10( prob_ing_1_and_ing_2 / (prob_ing_1 * prob_ing_2) )
+        G[ingredient_1][ingredient_2]["pmi"] = math.log10( prob_ing_1_and_ing_2 / (prob_ing_1 * prob_ing_2) )
+        G[ingredient_1][ingredient_2]["iou"] = G[ingredient_1][ingredient_2]["weight"] / (G.node[ingredient_1]["quantity"] + G.node[ingredient_2]["quantity"])
+
 
     return G
 
