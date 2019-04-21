@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from operator import itemgetter
 
 def most_central_edge(G):
-    centrality = nx.edge_betweenness_centrality(G, weight= "weight")
+    centrality = nx.edge_betweenness_centrality(G, weight= "pmi")
     return max(centrality, key=centrality.get)
 
 def heaviest(G):
@@ -27,11 +27,14 @@ def girvan_newman_step(G):
     ncomp = init_ncomp
     x = 0
     while ncomp == init_ncomp:
-        # bw = Counter(nx.edge_betweenness_centrality(G))
+        # bw = Counter(nx.edge_betweenness_centrality(G)) #girvan newman for just edge between centrality
         # a, b = bw.most_common(1)[0][0]
-        edge_to_cut = heaviest(G)
-        a = edge_to_cut[0]
-        b = edge_to_cut[1]
+        # edge_to_cut = heaviest(G) # Girvan Newman for heaviest edge
+        # a = edge_to_cut[0] 
+        # b = edge_to_cut[1]
+        bw = most_central_edge(G) 
+        a, b = bw[0], bw[1]
+
         G.remove_edge(a, b)
         ncomp = nx.number_connected_components(G)
         x += 1
@@ -184,7 +187,7 @@ if __name__ == '__main__':
     
     
     #Opening the pickled file
-    pickle_in = open("./data/graph/ingredients_with_most_shared_molecules.graph", "rb")
+    pickle_in = open("./data/graph/recipe_graph.pickle", "rb")
     #Getting the dictionary from the pickle
     shared_molecule_graph = pickle.load(pickle_in)
 
@@ -194,7 +197,7 @@ if __name__ == '__main__':
     plt.xlabel('number of communities')
     plt.ylabel('modularity')
     print("Optimal number of communities: {}".format(len(comms[np.argmax(mods)])))
-    plt.savefig('girvan_newman_shared_molecule_ratio_graph.png')
+    plt.savefig('girvan_newman_recipe_graph.png')
 
     with open('./data/partitions', 'wb') as file:
         file.write(pickle.dumps(comms))
