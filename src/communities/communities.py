@@ -13,6 +13,10 @@ def heaviest(G):
     u, v, w = max(G.edges(data='weight'), key=itemgetter(2))
     return (u, v)
 
+def biggest_pmi(G):
+    u, v, w = max(G.edges(data='pmi'), key=itemgetter(2))
+    return (u, v)
+
 def girvan_newman_step(G):
     """Run one step of the Girvan-Newman community detection algorithm.
     Afterwards, the graph will have one more connected component.
@@ -32,8 +36,11 @@ def girvan_newman_step(G):
         # edge_to_cut = heaviest(G) # Girvan Newman for heaviest edge
         # a = edge_to_cut[0] 
         # b = edge_to_cut[1]
-        bw = most_central_edge(G) 
+        bw = most_central_edge(G) # girvan newman for edge between centrality with pmi
         a, b = bw[0], bw[1]
+        # edge_to_cut = biggest_pmi(G) # Girvan Newman for heaviest edge
+        # a = edge_to_cut[0] 
+        # b = edge_to_cut[1]
 
         G.remove_edge(a, b)
         ncomp = nx.number_connected_components(G)
@@ -186,27 +193,29 @@ def find_communities_modularities(G, max_iter=None):
 if __name__ == '__main__':
     
     
-    #Opening the pickled file
-    pickle_in = open("./data/graph/recipe_graph.pickle", "rb")
-    #Getting the dictionary from the pickle
-    shared_molecule_graph = pickle.load(pickle_in)
+    # #Opening the pickled file
+    # pickle_in = open("./data/graph/recipe_graph.pickle", "rb")
+    # #Getting the dictionary from the pickle
+    # shared_molecule_graph = pickle.load(pickle_in)
 
 
-    comms, mods = find_communities_modularities(shared_molecule_graph)
-    plt.plot(list(range(1,len(mods)+1)), mods, ':o')
-    plt.xlabel('number of communities')
-    plt.ylabel('modularity')
-    print("Optimal number of communities: {}".format(len(comms[np.argmax(mods)])))
-    plt.savefig('girvan_newman_recipe_graph.png')
+    # comms, mods = find_communities_modularities(shared_molecule_graph)
+    # plt.plot(list(range(1,len(mods)+1)), mods, ':o')
+    # plt.xlabel('number of communities')
+    # plt.ylabel('modularity')
+    # print("Optimal number of communities: {}".format(len(comms[np.argmax(mods)])))
+    # plt.savefig('girvan_newman_recipe_graph.png')
 
-    with open('./data/partitions', 'wb') as file:
-        file.write(pickle.dumps(comms))
-        file.close()
+    # with open('./data/partitions', 'wb') as file:
+    #     file.write(pickle.dumps(comms))
+    #     file.close()
 
-    with open('./data/modularities', 'wb') as file:
-        file.write(pickle.dumps(mods))
-        file.close()
-#   # Uncomment this once done
-    # karateG = nx.karate_club_graph()
-    # c = find_communities_modularity(karateG)
-    # print("Optimal number of communities: {}".format(len(c)))
+    # with open('./data/modularities', 'wb') as file:
+    #     file.write(pickle.dumps(mods))
+    #     file.close()
+
+
+  # Uncomment this once done
+    karateG = nx.karate_club_graph()
+    c = find_communities_modularity(karateG)
+    print("Optimal number of communities: {}".format(len(c)))
