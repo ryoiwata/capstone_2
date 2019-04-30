@@ -1,5 +1,7 @@
 # Map of the Food World Based on Flavor Molecule Associations in Recipes
 
+## Currently being edited and cleaned up. Thank you for your patience and reach out if you have any questions! (4/30/2019)
+
 I will make a “map” of food ingredients that will have paths with other ingredients. These paths will be scaled by the the association between the food molecules of the two ingredients. The association will be calculated by the occurrence of two different food molecules from two different ingredients within any given cooking recipe. With such a map, I can find “communities” within ingredients that have closer associations than compared to those outside of it. Similar research has been done by Dr. Yong-Yeol Ahn et al.  (https://www.nature.com/articles/srep00196) In their studies, they have created graphs models that show the relationship between ingredients determined by the number of shared flavor molecules. I will build off of their work, by considering flavor molecules that are not necessarily the same between different ingredients. This will explore relationships of different flavor molecules that can then be extended to the ingredients themselves. The relationship can be calculated because patterns in cooking recipes can begin to display what goes into the synergy of flavor molecular combination.  
 
 # Other Information 
