@@ -12,7 +12,8 @@ For food ingredients and their associated flavor molecules, I will refer to Dr. 
 ### Recipe Puppy API
 For cooking recipes and ingredients, I will refer to Recipe Lab’s Recipe Puppy API (http://www.recipepuppy.com/about/api/) From Recipe Puppy API, I have collected information in the form of a list of ingredients for each recipe. 
 
-- I have collected information from both these sites using Python’s web scraping library, BeautifulSoup. Summing up to approximately 400 ingredients, 1,000 flavor compounds, and 100,000 recipes. The information was stored in a MongoDB database.
+### Data Mining
+I have collected information from both these sites using Python’s web scraping library, BeautifulSoup. Summing up to approximately 400 ingredients, 1,000 flavor compounds, and 100,000 recipes. The information was stored in a MongoDB database.
 
 ## What if graph theory?
 
