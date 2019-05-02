@@ -1,5 +1,9 @@
 # Ingredient Analysis in Recipes with Graph Theory
 
+<img src="./images/readme/all_ingredients.jpg"
+     alt="Markdown Monster icon"
+     style="float: left; margin-right: 10px;" />
+
 ## Summary 
 
 Through webscraped cooking recipes from Recipe Puppy API, I found ingredients pairs that can act as substitutes for each other in recipes that contain either ingredient. 
